@@ -1,0 +1,33 @@
+<?xml version="1.1" encoding="UTF-8" standalone="no"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation=" http://www.liquibase.org/xml/ns/dbchangelog
+        http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
+
+    <changeSet id="create_room_table" author="rostislav">
+        <createTable tableName="hotel_room">
+            <column autoIncrement="true" name="id" type="bigint">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="is_deleted" type="boolean">
+            </column>
+            <column name="name" type="varchar(55)">
+            </column>
+            <column name="description" type="varchar(255)">
+            </column>
+            <column name="room" type="int">
+            </column>
+            <column name="price" type="int">
+            </column>
+            <column name="room_capacity" type="int">
+            </column>
+            <column name="arrival_date" type="timestamp without time zone">
+            </column>
+            <column name="departure_date" type="timestamp without time zone">
+            </column>
+        </createTable>
+    </changeSet>
+
+
+</databaseChangeLog>
