@@ -5,44 +5,30 @@
         xsi:schemaLocation=" http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
 
-    <!--                        schemaName="public"-->
-    <changeSet id="create_comment_table" author="rostislav">
-        <createTable tableName="comment">
+    <changeSet id="create_hotel_table" author="rostislav">
+        <createTable tableName="hotel">
             <column autoIncrement="true" name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="is_deleted" type="boolean">
             </column>
-            <column name="comment_type" type="varchar(255)">
-
-            </column>
-            <column name="time" type="timestamp without time zone">
-
+            <column name="create_at" type="timestamp without time zone">
             </column>
             <column name="time_changed" type="timestamp without time zone">
-
             </column>
-            <column name="author_id" type="int">
-
+            <column name="name" type="varchar(55)">
             </column>
-            <column name="parent_id" type="int">
-
+            <column name="headline" type="varchar(55)">
             </column>
-            <column name="comment_text" type="text">
-
+            <column name="city" type="varchar(55)">
             </column>
-            <column name="post_id" type="int">
+            <column name="address" type="varchar(255)">
             </column>
-            <column name="is_blocked" type="boolean">
+            <column name="distance_from_center" type="int">
             </column>
-            <column name="like_amount" type="int">
-
+            <column name="rating" type="int">
             </column>
-            <column name="my_like" type="boolean">
-            </column>
-            <column name="comment_count" type="int">
-            </column>
-            <column name="image_path" type="varchar(255)">
+            <column name="number_ratings" type="int">
             </column>
         </createTable>
     </changeSet>

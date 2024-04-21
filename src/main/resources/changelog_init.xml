@@ -6,24 +6,11 @@
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
 
     <include file="classpath:liquibase/create-sequence.xml"/>
-    <include file="classpath:liquibase/create-country-table.xml"/>
-    <include file="classpath:liquibase/create-city-table.xml"/>
-    <include file="classpath:liquibase/create-auth-tables-changelog.xml"/>
+    <include file="classpath:liquibase/create-booking-table.xml"/>
+    <include file="classpath:liquibase/create-hotel-table.xml"/>
+    <include file="classpath:liquibase/create-role-table.xml"/>
+    <include file="classpath:liquibase/create-room-table.xml"/>
+    <include file="classpath:liquibase/create-user-role-table.xml"/>
+    <include file="classpath:liquibase/create-user-table.xml"/>
     <include file="classpath:liquibase/insert-roles.xml"/>
-    <include file="classpath:liquibase/create-account-table-changelog.xml"/>
-    <include file="classpath:liquibase/create-captcha-table.xml"/>
-    <include file="classpath:liquibase/create-account-table-changelog.xml"/>
-    <include file="classpath:liquibase/create-captcha-table.xml"/>
-    <include file="classpath:liquibase/create-comment-table.xml"/>
-    <include file="classpath:liquibase/create-post-table.xml"/>
-    <include file="classpath:liquibase/create-tag-table.xml"/>
-    <include file="classpath:liquibase/create-tags-post-table.xml"/>
-    <include file="classpath:liquibase/create-like-table.xml"/>
-    <include file="classpath:liquibase/create-dialog-table.xml"/>
-    <include file="classpath:liquibase/create-message-table.xml"/>
-    <include file="classpath:liquibase/create-recovery-link-table.xml"/>
-    <include file="classpath:liquibase/create-notification-table.xml"/>
-    <include file="classpath:liquibase/create-notification-settings-table.xml"/>
-    <include file="classpath:liquibase/create-friend-table.xml"/>
-    <include file="classpath:liquibase/insert-admin.xml"/>
 </databaseChangeLog>

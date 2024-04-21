@@ -5,8 +5,8 @@
         xsi:schemaLocation=" http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
 
-    <changeSet id="create_room_table" author="rostislav">
-        <createTable tableName="hotel_room">
+    <changeSet id="create_user_table" author="rostislav">
+        <createTable tableName="app_user">
             <column autoIncrement="true" name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -14,18 +14,14 @@
             </column>
             <column name="name" type="varchar(55)">
             </column>
-            <column name="description" type="varchar(255)">
+            <column name="password" type="varchar(55)">
             </column>
-            <column name="room" type="int">
+            <column name="email" type="varchar(55)">
+                <constraints unique="true"/>
             </column>
-            <column name="price" type="int">
+            <column name="create_at" type="timestamp without time zone">
             </column>
-            <column name="room_capacity" type="int">
-            </column>
-            <column name="arrival_date" type="timestamp without time zone">
-            </column>
-            <column name="departure_date" type="timestamp without time zone">
-            </column>
+
         </createTable>
     </changeSet>
 

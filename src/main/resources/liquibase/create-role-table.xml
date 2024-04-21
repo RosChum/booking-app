@@ -5,21 +5,15 @@
         xsi:schemaLocation=" http://www.liquibase.org/xml/ns/dbchangelog
         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd">
 
-    <changeSet id="create_user_table" author="rostislav">
-        <createTable tableName="app_user">
+    <changeSet id="create_role_table" author="rostislav">
+        <createTable tableName="role">
             <column autoIncrement="true" name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
             <column name="is_deleted" type="boolean">
             </column>
-            <column name="name" type="varchar(55)">
-            </column>
-            <column name="password" type="varchar(55)">
-            </column>
-            <column name="email" type="varchar(55)">
+            <column name="role_type" type="varchar(55)">
                 <constraints unique="true"/>
-            </column>
-            <column name="create_at" type="timestamp without time zone">
             </column>
 
         </createTable>
