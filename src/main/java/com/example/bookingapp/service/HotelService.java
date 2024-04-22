@@ -1,0 +1,73 @@
+package com.example.bookingapp.service;
+
+import com.example.bookingapp.dto.hotel.HotelDto;
+import com.example.bookingapp.dto.hotel.HotelSearchDto;
+import com.example.bookingapp.entity.Hotel;
+import com.example.bookingapp.entity.Hotel_;
+import com.example.bookingapp.exception.ContentNotFoundException;
+import com.example.bookingapp.mapper.HotelMapper;
+import com.example.bookingapp.mapper.RoomMapper;
+import com.example.bookingapp.repository.HotelRepository;
+import com.example.bookingapp.specification.BaseSpecification;
+import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
+
+import java.time.ZonedDateTime;
+
+import static com.example.bookingapp.specification.BaseSpecification.equal;
+
+@Service
+@RequiredArgsConstructor
+public class HotelService implements BaseService<HotelDto, HotelSearchDto> {
+
+    private final HotelRepository hotelRepository;
+    private final HotelMapper hotelMapper;
+    private final RoomService roomService;
+    private final RoomMapper roomMapper;
+
+    @Override
+    public Page<HotelDto> findAll(HotelSearchDto dto, Pageable pageable) {
+        Page<Hotel> hotels = hotelRepository.findAll(getSpecification(dto), pageable);
+        return new PageImpl<>(hotels.map(hotel -> {
+            HotelDto hotelDto = hotelMapper.convertToDto(hotel);
+            return hotelDto;
+        }).toList(), pageable, hotels.getTotalElements());
+
+
+    }
+
+    @Override
+    public HotelDto findById(Long id) {
+        HotelDto hotelDto = hotelMapper.convertToDto(hotelRepository.findById(id)
+                .orElseThrow(() -> new ContentNotFoundException("Hotel not found!")));
+        return hotelDto;
+    }
+
+    @Override
+    public HotelDto create(HotelDto dto) {
+        Hotel hotel = hotelMapper.createEntityByDto(dto);
+        hotel.setRoom(roomMapper.convertListDtoToListEntity(roomService.createAll(dto.getRoom())));
+        return hotelMapper.convertToDto(hotelRepository.save(hotel));
+    }
+
+    @Override
+    public HotelDto update(Long id, HotelDto dto) {
+        return null;
+    }
+
+    @Override
+    public void deleteById(Long id) {
+        hotelRepository.deleteById(id);
+    }
+
+
+    private Specification<Hotel> getSpecification(HotelSearchDto searchDto) {
+        return BaseSpecification.getBaseSpecification(searchDto).and(equal(Hotel_.name, searchDto.getName()))
+                .and(equal(Hotel_.city, searchDto.getCity()));
+    }
+
+}

@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -39,8 +41,7 @@ public class Hotel extends BaseEntity {
     @Column(name = "number_ratings")
     private Integer numberRatings;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "roomId", referencedColumnName = "id")
-    private Room room;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "hotel")
+    private List<Room> room = new ArrayList<>();
 
 }

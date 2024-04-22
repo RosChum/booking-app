@@ -1,12 +1,13 @@
 package com.example.bookingapp.service;
 
 import com.example.bookingapp.dto.baseDto.BaseDto;
+import com.example.bookingapp.dto.baseDto.BaseSearchDto;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-public interface BaseService<T extends BaseDto> {
+public interface BaseService<T extends BaseDto, R extends BaseSearchDto> {
 
-    default Page<T> findAll(T dto, Pageable pageable) {
+    default Page<T> findAll(R dto, Pageable pageable) {
         return null;
     }
 

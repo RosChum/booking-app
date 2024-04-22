@@ -1,9 +1,6 @@
 package com.example.bookingapp.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -30,7 +27,8 @@ public class Room extends BaseEntity {
     @Column(name = "room_capacity")
     private Integer roomCapacity;
 
-    @OneToOne(mappedBy = "room")
+    @ManyToOne
+    @JoinColumn(name = "hotel_id", referencedColumnName = "id")
     private Hotel hotel;
 
     @OneToOne(mappedBy = "room")

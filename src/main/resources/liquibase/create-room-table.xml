@@ -18,6 +18,8 @@
             </column>
             <column name="room" type="int">
             </column>
+            <column name="hotel_id" type="bigint">
+            </column>
             <column name="price" type="decimal">
             </column>
             <column name="room_capacity" type="int">
