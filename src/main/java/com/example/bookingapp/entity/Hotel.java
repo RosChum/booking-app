@@ -41,7 +41,7 @@ public class Hotel extends BaseEntity {
     @Column(name = "number_ratings")
     private Integer numberRatings;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "hotel")
+    @OneToMany(cascade = {CascadeType.REFRESH,CascadeType.REMOVE}, mappedBy = "hotel")
     private List<Room> room = new ArrayList<>();
 
 }

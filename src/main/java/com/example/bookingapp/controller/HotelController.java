@@ -3,6 +3,7 @@ package com.example.bookingapp.controller;
 import com.example.bookingapp.dto.hotel.HotelDto;
 import com.example.bookingapp.dto.hotel.HotelSearchDto;
 import com.example.bookingapp.service.HotelService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,12 +31,12 @@ public class HotelController implements BaseController<HotelDto, HotelSearchDto>
 
     @Override
     @PostMapping
-    public ResponseEntity<HotelDto> create(@RequestBody HotelDto dto) {
+    public ResponseEntity<HotelDto> create(@RequestBody @Valid HotelDto dto) {
         return ResponseEntity.ok(hotelService.create(dto));
     }
 
     @Override
-    @GetMapping("/update/{id}")
+    @PutMapping("/update/{id}")
     public ResponseEntity<HotelDto> update(@PathVariable Long id, @RequestBody HotelDto dto) {
         return ResponseEntity.ok(hotelService.update(id,dto));
     }

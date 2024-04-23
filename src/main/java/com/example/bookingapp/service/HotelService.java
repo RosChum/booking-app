@@ -49,21 +49,30 @@ public class HotelService implements BaseService<HotelDto, HotelSearchDto> {
 
     @Override
     public HotelDto create(HotelDto dto) {
-        Hotel hotel = hotelMapper.createEntityByDto(dto);
-        hotel.setRoom(roomMapper.convertListDtoToListEntity(roomService.createAll(dto.getRoom())));
-        return hotelMapper.convertToDto(hotelRepository.save(hotel));
+        Hotel hotel = hotelRepository.save(hotelMapper.createEntityByDto(dto));
+        if (dto.getRoom() != null) {
+            dto.getRoom().forEach(roomDto -> roomDto.setHotel(hotelMapper.convertToShortDto(hotel)));
+            hotel.setRoom(roomMapper.convertListDtoToListEntity(roomService.createAll(dto.getRoom())));
+        }
+        return hotelMapper.convertToDto(hotel);
     }
 
     @Override
     public HotelDto update(Long id, HotelDto dto) {
-        return null;
+        Hotel hotel = hotelRepository.findById(id).orElseThrow(() -> new ContentNotFoundException("Hotel not found!"));
+        hotel.setName(dto.getName());
+        hotel.setAddress(hotel.getAddress());
+        hotel.setCity(dto.getCity());
+        hotel.setDistanceFromCenter(dto.getDistanceFromCenter());
+        hotel.setHeadline(dto.getHeadline());
+        hotel.setTimeChanged(ZonedDateTime.now());
+        return hotelMapper.convertToDto(hotelRepository.save(hotel));
     }
 
     @Override
     public void deleteById(Long id) {
         hotelRepository.deleteById(id);
     }
-
 
     private Specification<Hotel> getSpecification(HotelSearchDto searchDto) {
         return BaseSpecification.getBaseSpecification(searchDto).and(equal(Hotel_.name, searchDto.getName()))

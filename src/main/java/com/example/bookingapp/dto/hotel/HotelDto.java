@@ -4,6 +4,7 @@ import com.example.bookingapp.dto.baseDto.BaseDto;
 import com.example.bookingapp.dto.room.RoomDto;
 import com.example.bookingapp.entity.Room;
 import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,12 +24,16 @@ public class HotelDto extends BaseDto {
 
     private ZonedDateTime timeChanged;
 
+    @NotBlank(message = "Название отеля не должно быть пустым")
     private String name;
 
+    @NotBlank(message = "Описание отеля не должно быть пустым")
     private String headline;
 
+    @NotBlank(message = "Наименование города не должно быть пустым")
     private String city;
 
+    @NotBlank(message = "Адрес не должен быть пустым")
     private String address;
 
     private Integer distanceFromCenter;

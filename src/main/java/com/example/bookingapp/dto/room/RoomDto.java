@@ -9,6 +9,8 @@ import jakarta.persistence.Column;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -26,6 +28,7 @@ public class RoomDto extends BaseDto {
 
     private String description;
 
+    @NotBlank(message = "Номер комнаты не должен быть пустым")
     private Integer room;
 
     private BigDecimal price;
