@@ -18,11 +18,11 @@ public class Booking extends BaseEntity {
     @Column(name = "departure_date")
     private ZonedDateTime departureDate;
 
-    @OneToOne(cascade = CascadeType.DETACH)
+    @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @OneToOne(cascade = CascadeType.DETACH)
+    @ManyToOne(cascade = CascadeType.DETACH)
     @JoinColumn(name = "room_id", referencedColumnName = "id")
     private Room room;
 

@@ -2,6 +2,7 @@ package com.example.bookingapp.controller;
 
 import com.example.bookingapp.dto.hotel.HotelDto;
 import com.example.bookingapp.dto.hotel.HotelSearchDto;
+import com.example.bookingapp.service.BaseService;
 import com.example.bookingapp.service.HotelService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class HotelController implements BaseController<HotelDto, HotelSearchDto> {
 
-    private final HotelService hotelService;
+    private final BaseService<HotelDto, HotelSearchDto> hotelService;
 
     @Override
     @GetMapping

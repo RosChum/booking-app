@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -31,8 +33,8 @@ public class Room extends BaseEntity {
     @JoinColumn(name = "hotel_id", referencedColumnName = "id")
     private Hotel hotel;
 
-    @OneToOne(mappedBy = "room")
-    private Booking booking;
+    @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
+    private List <Booking> booking = new ArrayList<>();
 
 
 }

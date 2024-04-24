@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.ZonedDateTime;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -27,8 +28,8 @@ public class User extends BaseEntity{
     @Column(name = "create_at")
     private ZonedDateTime createAt;
 
-    @OneToOne(mappedBy = "user")
-    private Booking booking;
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    private List<Booking> booking = new ArrayList<>();
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id", referencedColumnName = "id"),

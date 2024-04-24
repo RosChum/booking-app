@@ -8,7 +8,9 @@ import org.springframework.http.ResponseEntity;
 
 public interface BaseController<Dto extends BaseDto, SearchDto extends BaseSearchDto> {
 
-    ResponseEntity<Page<Dto>> findAll(SearchDto dto, Pageable pageable);
+    default ResponseEntity<Page<Dto>> findAll(SearchDto dto, Pageable pageable){
+        return null;
+    };
 
     ResponseEntity<Dto> findById(Long id);
 

@@ -3,12 +3,11 @@ package com.example.bookingapp.service;
 import com.example.bookingapp.dto.room.RoomDto;
 import com.example.bookingapp.dto.room.RoomSearchDto;
 import com.example.bookingapp.entity.Room;
+import com.example.bookingapp.exception.ContentNotFoundException;
 import com.example.bookingapp.mapper.RoomMapper;
 import com.example.bookingapp.repository.HotelRepository;
 import com.example.bookingapp.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,14 +21,13 @@ public class RoomService implements BaseService<RoomDto, RoomSearchDto> {
     private final RoomMapper roomMapper;
     private final HotelRepository hotelRepository;
 
-    @Override
-    public Page<RoomDto> findAll(RoomSearchDto dto, Pageable pageable) {
-
-    }
 
     @Override
     public RoomDto findById(Long id) {
-        return null;
+        RoomDto roomDto = roomMapper.convertToDto(roomRepository.findById(id)
+                .orElseThrow(() -> new ContentNotFoundException("Room not found")));
+
+        return roomDto;
     }
 
     @Override
@@ -41,12 +39,22 @@ public class RoomService implements BaseService<RoomDto, RoomSearchDto> {
 
     @Override
     public RoomDto update(Long id, RoomDto dto) {
-        return null;
+
+        Room exsistRoom = roomRepository.findById(id)
+                .orElseThrow(() -> new ContentNotFoundException("Room not found"));
+
+        exsistRoom.setRoom(dto.getRoom());
+        exsistRoom.setRoomCapacity(dto.getRoomCapacity());
+        exsistRoom.setName(dto.getName());
+        exsistRoom.setPrice(dto.getPrice());
+        exsistRoom.setDescription(dto.getDescription());
+
+        return roomMapper.convertToDto(roomRepository.save(exsistRoom));
     }
 
     @Override
     public void deleteById(Long id) {
-
+        roomRepository.deleteById(id);
     }
 
     public List<RoomDto> createAll(List<RoomDto> roomDtos) {
