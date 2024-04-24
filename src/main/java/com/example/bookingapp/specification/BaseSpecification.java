@@ -22,7 +22,7 @@ public class BaseSpecification {
                 });
     }
 
-    public <T> Specification<T> like(SingularAttribute<T, String> field, String value) {
+    public static <T> Specification<T> like(SingularAttribute<T, String> field, String value) {
         return checkForNull(value, () ->
                 (root, query, criteriaBuilder) -> {
                     query.distinct(true);
@@ -30,8 +30,8 @@ public class BaseSpecification {
                 });
     }
 
-    public <T> Specification<T> between(SingularAttribute<T, ZonedDateTime> field,
-                                        ZonedDateTime timeFrom, ZonedDateTime timeTo) {
+    public static <T> Specification<T> between(SingularAttribute<T, ZonedDateTime> field,
+                                               ZonedDateTime timeFrom, ZonedDateTime timeTo) {
         if (timeTo == null && timeFrom == null) {
             return (root, query, criteriaBuilder) ->
             {

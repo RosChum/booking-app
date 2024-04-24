@@ -30,4 +30,16 @@ public class ControllerAdvice {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(exceptionMessage);
 
     }
+
+
+    @ExceptionHandler(UserFoundException.class)
+    public ResponseEntity<ExceptionMessage> userFoundException(UserFoundException exception){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(ExceptionMessage.builder().message(exception.getMessage()).build());
+
+    }
+
+    @ExceptionHandler(UserAlreadyExistException.class)
+    public ResponseEntity<ExceptionMessage> userAlreadyExistException(UserAlreadyExistException exception){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ExceptionMessage.builder().message(exception.getMessage()).build());
+    }
 }

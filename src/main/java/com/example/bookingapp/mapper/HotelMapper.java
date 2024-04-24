@@ -9,10 +9,10 @@ import org.mapstruct.ReportingPolicy;
 
 import java.time.ZonedDateTime;
 
-@Mapper(componentModel = "spring", imports = ZonedDateTime.class, unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", imports = ZonedDateTime.class, uses = RoomMapper.class)
 public interface HotelMapper {
 
-    @Mapping(target = "room", ignore = true)
+
     HotelDto convertToDto(Hotel hotel);
     @Mapping(target = "room", ignore = true)
     Hotel convertToEntity(HotelDto hotelDto);

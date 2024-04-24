@@ -8,10 +8,14 @@ import org.mapstruct.ReportingPolicy;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
+@Mapper(componentModel = "spring", uses = BookingMapper.class)
 public interface RoomMapper {
+
     @Mapping(target = "booking", ignore = true)
+    @Mapping(target = "isDeleted", defaultValue = "false")
     Room convertToEntity(RoomDto roomDto);
+
+
     @Mapping(target = "booking", ignore = true)
     RoomDto convertToDto(Room room);
 

@@ -26,7 +26,6 @@ public class RoomService implements BaseService<RoomDto, RoomSearchDto> {
     public RoomDto findById(Long id) {
         RoomDto roomDto = roomMapper.convertToDto(roomRepository.findById(id)
                 .orElseThrow(() -> new ContentNotFoundException("Room not found")));
-
         return roomDto;
     }
 
@@ -39,17 +38,14 @@ public class RoomService implements BaseService<RoomDto, RoomSearchDto> {
 
     @Override
     public RoomDto update(Long id, RoomDto dto) {
-
-        Room exsistRoom = roomRepository.findById(id)
+        Room existRoom = roomRepository.findById(id)
                 .orElseThrow(() -> new ContentNotFoundException("Room not found"));
-
-        exsistRoom.setRoom(dto.getRoom());
-        exsistRoom.setRoomCapacity(dto.getRoomCapacity());
-        exsistRoom.setName(dto.getName());
-        exsistRoom.setPrice(dto.getPrice());
-        exsistRoom.setDescription(dto.getDescription());
-
-        return roomMapper.convertToDto(roomRepository.save(exsistRoom));
+        existRoom.setRoom(dto.getRoom());
+        existRoom.setRoomCapacity(dto.getRoomCapacity());
+        existRoom.setName(dto.getName());
+        existRoom.setPrice(dto.getPrice());
+        existRoom.setDescription(dto.getDescription());
+        return roomMapper.convertToDto(roomRepository.save(existRoom));
     }
 
     @Override

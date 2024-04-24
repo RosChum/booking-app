@@ -44,6 +44,9 @@ public class HotelService implements BaseService<HotelDto, HotelSearchDto> {
     public HotelDto findById(Long id) {
         HotelDto hotelDto = hotelMapper.convertToDto(hotelRepository.findById(id)
                 .orElseThrow(() -> new ContentNotFoundException("Hotel not found!")));
+        if (hotelDto.getIsDeleted()) {
+            throw new ContentNotFoundException("Hotel not found!");
+        }
         return hotelDto;
     }
 
@@ -71,12 +74,15 @@ public class HotelService implements BaseService<HotelDto, HotelSearchDto> {
 
     @Override
     public void deleteById(Long id) {
-        hotelRepository.deleteById(id);
+        Hotel hotel = hotelRepository.findById(id).orElseThrow(() -> new ContentNotFoundException("Hotel not found!"));
+        hotel.getRoom().forEach(room-> roomService.deleteById(room.getId()));
+        hotelRepository.delete(hotel);
     }
 
     private Specification<Hotel> getSpecification(HotelSearchDto searchDto) {
         return BaseSpecification.getBaseSpecification(searchDto).and(equal(Hotel_.name, searchDto.getName()))
-                .and(equal(Hotel_.city, searchDto.getCity()));
+                .and(equal(Hotel_.city, searchDto.getCity()))
+                .and(equal(Hotel_.isDeleted,false));
     }
 
 }
