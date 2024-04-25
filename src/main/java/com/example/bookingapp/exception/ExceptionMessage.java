@@ -1,11 +1,14 @@
 package com.example.bookingapp.exception;
 
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
+
+import java.io.Serializable;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
-public class ExceptionMessage {
+public class ExceptionMessage implements Serializable {
 
     private String httpCode;
     private String message;

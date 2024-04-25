@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.ZonedDateTime;
 
@@ -50,6 +51,7 @@ public class HotelService implements BaseService<HotelDto, HotelSearchDto> {
         return hotelDto;
     }
 
+    @Transactional
     @Override
     public HotelDto create(HotelDto dto) {
         Hotel hotel = hotelRepository.save(hotelMapper.createEntityByDto(dto));
@@ -75,14 +77,14 @@ public class HotelService implements BaseService<HotelDto, HotelSearchDto> {
     @Override
     public void deleteById(Long id) {
         Hotel hotel = hotelRepository.findById(id).orElseThrow(() -> new ContentNotFoundException("Hotel not found!"));
-        hotel.getRoom().forEach(room-> roomService.deleteById(room.getId()));
+        hotel.getRoom().forEach(room -> roomService.deleteById(room.getId()));
         hotelRepository.delete(hotel);
     }
 
     private Specification<Hotel> getSpecification(HotelSearchDto searchDto) {
         return BaseSpecification.getBaseSpecification(searchDto).and(equal(Hotel_.name, searchDto.getName()))
                 .and(equal(Hotel_.city, searchDto.getCity()))
-                .and(equal(Hotel_.isDeleted,false));
+                .and(equal(Hotel_.isDeleted, false));
     }
 
 }

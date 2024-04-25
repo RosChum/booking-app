@@ -2,11 +2,13 @@ package com.example.bookingapp.service;
 
 import com.example.bookingapp.dto.user.UserDto;
 import com.example.bookingapp.dto.user.UserSearchDto;
+import com.example.bookingapp.entity.Role;
 import com.example.bookingapp.entity.User;
 import com.example.bookingapp.entity.User_;
 import com.example.bookingapp.exception.UserAlreadyExistException;
 import com.example.bookingapp.exception.UserFoundException;
 import com.example.bookingapp.mapper.UserMapper;
+import com.example.bookingapp.repository.RoleRepository;
 import com.example.bookingapp.repository.UserRepository;
 import com.example.bookingapp.specification.BaseSpecification;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +19,9 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
+import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -24,6 +29,7 @@ public class UserService implements BaseService<UserDto, UserSearchDto> {
 
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final RoleRepository roleRepository;
 
     @Override
     public Page<UserDto> findAll(UserSearchDto dto, Pageable pageable) {
@@ -47,6 +53,12 @@ public class UserService implements BaseService<UserDto, UserSearchDto> {
                     .format("User with email {0} already exist ", dto.getEmail()));
         }
         User newUser = userMapper.convertToEntity(dto);
+        newUser.getRoles().addAll(dto.getRoles().stream().map(role -> {
+           Role exustRole = roleRepository.findByRoleType(role.getRoleType()).orElseThrow();
+           exustRole.getUsers().add(newUser);
+           return exustRole;
+        }).collect(Collectors.toSet()));
+
         return userMapper.convertToDto(userRepository.save(newUser));
     }
 

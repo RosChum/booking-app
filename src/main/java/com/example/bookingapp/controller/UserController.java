@@ -3,6 +3,7 @@ package com.example.bookingapp.controller;
 import com.example.bookingapp.dto.user.UserDto;
 import com.example.bookingapp.dto.user.UserSearchDto;
 import com.example.bookingapp.service.BaseService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,7 +31,7 @@ public class UserController implements BaseController<UserDto, UserSearchDto> {
 
     @PostMapping
     @Override
-    public ResponseEntity<UserDto> create(@RequestBody UserDto dto) {
+    public ResponseEntity<UserDto> create(@Valid @RequestBody UserDto dto) {
         return ResponseEntity.ok(userService.create(dto));
     }
 

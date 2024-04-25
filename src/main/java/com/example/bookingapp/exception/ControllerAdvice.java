@@ -38,8 +38,8 @@ public class ControllerAdvice {
 
     }
 
-    @ExceptionHandler(UserAlreadyExistException.class)
-    public ResponseEntity<ExceptionMessage> userAlreadyExistException(UserAlreadyExistException exception){
+    @ExceptionHandler({UserAlreadyExistException.class, BookingDatesException.class})
+    public ResponseEntity<ExceptionMessage> userAlreadyExistException(RuntimeException exception){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ExceptionMessage.builder().message(exception.getMessage()).build());
     }
 }

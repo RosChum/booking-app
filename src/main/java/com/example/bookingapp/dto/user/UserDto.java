@@ -30,7 +30,8 @@ public class UserDto extends BaseDto {
     @NotBlank(message = "Пароль не должен быть пустым")
     private String password;
 
-   @Email(message = "Некорректный Email")
+    @Email(message = "Некорректный Email")
+    @NotBlank(message = "Email не должен быть пустым")
     private String email;
 
     private ZonedDateTime createAt;

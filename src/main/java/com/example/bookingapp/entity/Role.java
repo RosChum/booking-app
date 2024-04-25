@@ -1,9 +1,7 @@
 package com.example.bookingapp.entity;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.ManyToMany;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -17,8 +15,10 @@ import java.util.Set;
 public class Role extends BaseEntity {
 
     @Column(name = "role_type")
+    @Enumerated(EnumType.STRING)
     public RoleType roleType;
 
-    @ManyToMany(mappedBy = "roles")
+    @JsonIgnore
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
     private Set<User> users = new HashSet<>();
 }

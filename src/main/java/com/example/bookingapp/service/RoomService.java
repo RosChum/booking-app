@@ -9,6 +9,7 @@ import com.example.bookingapp.repository.HotelRepository;
 import com.example.bookingapp.repository.RoomRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -26,13 +27,17 @@ public class RoomService implements BaseService<RoomDto, RoomSearchDto> {
     public RoomDto findById(Long id) {
         RoomDto roomDto = roomMapper.convertToDto(roomRepository.findById(id)
                 .orElseThrow(() -> new ContentNotFoundException("Room not found")));
+        if (roomDto.getIsDeleted()) {
+            throw new ContentNotFoundException("Room not found");
+        }
         return roomDto;
     }
 
+    @Transactional
     @Override
     public RoomDto create(RoomDto dto) {
         Room room = roomMapper.convertToEntity(dto);
-        room.setHotel(hotelRepository.findById(dto.getHotel().getId()).orElseThrow());
+        room.setHotel(hotelRepository.findById(dto.getHotel().getId()).orElseThrow(() -> new ContentNotFoundException("Hotel not found!")));
         return roomMapper.convertToDto(roomRepository.save(room));
     }
 
@@ -40,6 +45,9 @@ public class RoomService implements BaseService<RoomDto, RoomSearchDto> {
     public RoomDto update(Long id, RoomDto dto) {
         Room existRoom = roomRepository.findById(id)
                 .orElseThrow(() -> new ContentNotFoundException("Room not found"));
+        if (existRoom.getIsDeleted()) {
+            throw new ContentNotFoundException("Room not found");
+        }
         existRoom.setRoom(dto.getRoom());
         existRoom.setRoomCapacity(dto.getRoomCapacity());
         existRoom.setName(dto.getName());
