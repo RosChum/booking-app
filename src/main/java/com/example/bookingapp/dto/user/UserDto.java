@@ -2,6 +2,7 @@ package com.example.bookingapp.dto.user;
 
 import com.example.bookingapp.dto.baseDto.BaseDto;
 import com.example.bookingapp.dto.booking.BookingDto;
+import com.example.bookingapp.dto.booking.BookingShortDto;
 import com.example.bookingapp.entity.Booking;
 import com.example.bookingapp.entity.Role;
 import jakarta.persistence.*;
@@ -36,7 +37,7 @@ public class UserDto extends BaseDto {
 
     private ZonedDateTime createAt;
 
-    private List<BookingDto> booking = new ArrayList<>();
+    private List<BookingShortDto> booking = new ArrayList<>();
 
     private Set<Role> roles = new HashSet<>();
 }

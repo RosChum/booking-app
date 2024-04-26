@@ -7,6 +7,7 @@ import com.example.bookingapp.entity.User;
 import com.example.bookingapp.entity.User_;
 import com.example.bookingapp.exception.UserAlreadyExistException;
 import com.example.bookingapp.exception.UserFoundException;
+import com.example.bookingapp.mapper.BookingMapper;
 import com.example.bookingapp.mapper.UserMapper;
 import com.example.bookingapp.repository.RoleRepository;
 import com.example.bookingapp.repository.UserRepository;
@@ -30,6 +31,7 @@ public class UserService implements BaseService<UserDto, UserSearchDto> {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
     private final RoleRepository roleRepository;
+    private final BookingMapper bookingMapper;
 
     @Override
     public Page<UserDto> findAll(UserSearchDto dto, Pageable pageable) {
@@ -42,8 +44,11 @@ public class UserService implements BaseService<UserDto, UserSearchDto> {
 
     @Override
     public UserDto findById(Long id) {
-        return userMapper.convertToDto(userRepository.findById(id)
-                .orElseThrow(() -> new UserFoundException(MessageFormat.format("User with id {0} not found", id))));
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new UserFoundException(MessageFormat.format("User with id {0} not found", id)));
+        UserDto userDto =userMapper.convertToDto(user);
+        userDto.setBooking(bookingMapper.convertListToListShortDto(user.getBooking()));
+        return userDto;
     }
 
     @Override

@@ -10,6 +10,7 @@ import com.example.bookingapp.repository.BookingRepository;
 import com.example.bookingapp.repository.RoomRepository;
 import com.example.bookingapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -19,12 +20,15 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.MessageFormat;
 import java.time.ZonedDateTime;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class BookingService {
 
     private final BookingRepository bookingRepository;
@@ -35,19 +39,21 @@ public class BookingService {
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public BookingDto createBooking(BookingDto bookingDto) {
 
-        if (checkBookingDate(bookingDto.getArrivalDate(), bookingDto.getDepartureDate(), bookingDto.getRoom().getId())) {
+        Map<Boolean, List<Booking>> checkAvailable = checkAvailableForBooking(bookingDto.getArrivalDate()
+                , bookingDto.getDepartureDate(), bookingDto.getRoom().getId());
 
+       if (checkAvailable.containsKey(true)) {
             Booking booking = bookingMapper.convertToEntity(bookingDto);
             booking.setUser(userRepository.findById(bookingDto.getUser().getId()).orElseThrow());
             booking.setRoom(roomRepository.findById(bookingDto.getRoom().getId()).orElseThrow());
             return bookingMapper.convertToDto(bookingRepository.save(booking));
         } else {
-//            Map<String, List<ZonedDateTime>> bookingDate = new HashMap<>();
-//            getBookingByRoomId(bookingDto.getRoom().getId()).forEach(booking -> {
-//                bookingDate.put("From", List.of(booking.getArrivalDate()));
-//                bookingDate.put("To", List.of(booking.getDepartureDate()));
-//            });bookingDate.get("From"), bookingDate.get("To"))
-            throw new BookingDatesException(MessageFormat.format("Dates are already booked, please select other dates. BookingDates: From {0} To {1}", bookingDto.getArrivalDate(),bookingDto.getDepartureDate()));
+            StringBuilder stringBuilder = new StringBuilder();
+
+            checkAvailable.values().forEach(bookings -> bookings.
+                    forEach(booking -> stringBuilder.append(" From ").append(booking.getArrivalDate())
+                            .append(" To ").append(booking.getDepartureDate())));
+            throw new BookingDatesException(MessageFormat.format("Dates are already booked, please select other dates. Booking Dates:  {0} ", stringBuilder.toString()));
         }
 
     }
@@ -59,20 +65,17 @@ public class BookingService {
 
     }
 
-    private boolean checkBookingDate(ZonedDateTime dateFrom, ZonedDateTime dateTo, Long roomId) {
+    private Map<Boolean, List<Booking>> checkAvailableForBooking(ZonedDateTime dateFrom, ZonedDateTime dateTo, Long roomId) {
         Room room = roomRepository.findById(roomId)
                 .orElseThrow(() -> new ContentNotFoundException(
                         MessageFormat.format("Room with id {0} not found", roomId)));
 
         List<Booking> existsBooking = room.getBooking().stream()
-                .filter(booking -> dateFrom.isBefore(booking.getDepartureDate()))
-                .filter(booking -> dateTo.isBefore(booking.getArrivalDate()))
+                .filter(booking -> !dateFrom.isAfter(booking.getDepartureDate()))
+                .filter(booking -> !dateTo.isBefore(booking.getArrivalDate()))
                 .toList();
-        return existsBooking.isEmpty();
+        return Map.of(existsBooking.isEmpty(), existsBooking);
 
     }
 
-    private List<Booking> getBookingByRoomId(Long roomId) {
-        return roomRepository.findById(roomId).orElseThrow().getBooking();
-    }
 }

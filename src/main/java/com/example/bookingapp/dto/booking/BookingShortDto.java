@@ -1,12 +1,7 @@
 package com.example.bookingapp.dto.booking;
 
 import com.example.bookingapp.dto.baseDto.BaseDto;
-import com.example.bookingapp.dto.room.RoomDto;
 import com.example.bookingapp.dto.room.RoomShortDto;
-import com.example.bookingapp.dto.user.UserDto;
-import com.example.bookingapp.dto.user.UserSearchDto;
-import com.example.bookingapp.dto.user.UserShortDto;
-import com.example.bookingapp.entity.User;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,14 +13,11 @@ import java.time.ZonedDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class BookingDto extends BaseDto {
-
+public class BookingShortDto extends BaseDto {
 
     private ZonedDateTime arrivalDate;
 
     private ZonedDateTime departureDate;
-
-    private UserShortDto user;
 
     private RoomShortDto room;
 }
