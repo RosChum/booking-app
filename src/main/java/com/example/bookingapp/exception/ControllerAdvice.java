@@ -42,4 +42,11 @@ public class ControllerAdvice {
     public ResponseEntity<ExceptionMessage> userAlreadyExistException(RuntimeException exception){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ExceptionMessage.builder().message(exception.getMessage()).build());
     }
+
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ExceptionMessage> authenticationException(AuthenticationException exception){
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(ExceptionMessage.builder().message(exception.getMessage()).build());
+
+    }
 }

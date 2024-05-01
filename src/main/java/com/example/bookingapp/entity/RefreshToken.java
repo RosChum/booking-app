@@ -23,10 +23,13 @@ public class RefreshToken implements Serializable {
     private Long id;
 
     @Indexed
-    private String refreshToken;
+    private String token;
 
     @Indexed
     private Long userId;
+
+    @Indexed
+    private String userEmail;
 
     @Indexed
     private Instant expireDate;

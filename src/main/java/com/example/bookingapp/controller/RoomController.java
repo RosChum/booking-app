@@ -5,6 +5,7 @@ import com.example.bookingapp.dto.room.RoomSearchDto;
 import com.example.bookingapp.service.BaseService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -16,6 +17,7 @@ public class RoomController implements BaseController<RoomDto, RoomSearchDto> {
 
     @GetMapping("/{id}")
     @Override
+    @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<RoomDto> findById(@PathVariable Long id) {
         return ResponseEntity.ok(roomService.findById(id));
     }
