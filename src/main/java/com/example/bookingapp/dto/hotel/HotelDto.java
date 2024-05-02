@@ -38,7 +38,7 @@ public class HotelDto extends BaseDto {
 
     private Integer distanceFromCenter;
 
-    private Integer rating;
+    private Double rating;
 
     private Integer numberRatings;
 

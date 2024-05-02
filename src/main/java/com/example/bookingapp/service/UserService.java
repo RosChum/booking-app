@@ -17,11 +17,10 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.text.MessageFormat;
-import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -32,6 +31,7 @@ public class UserService implements BaseService<UserDto, UserSearchDto> {
     private final UserMapper userMapper;
     private final RoleRepository roleRepository;
     private final BookingMapper bookingMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public Page<UserDto> findAll(UserSearchDto dto, Pageable pageable) {
@@ -58,10 +58,11 @@ public class UserService implements BaseService<UserDto, UserSearchDto> {
                     .format("User with email {0} already exist ", dto.getEmail()));
         }
         User newUser = userMapper.convertToEntity(dto);
+        newUser.setPassword(passwordEncoder.encode(dto.getPassword()));
         newUser.getRoles().addAll(dto.getRoles().stream().map(role -> {
-           Role exustRole = roleRepository.findByRoleType(role.getRoleType()).orElseThrow();
-           exustRole.getUsers().add(newUser);
-           return exustRole;
+           Role existRole = roleRepository.findByRoleType(role.getRoleType()).orElseThrow();
+           existRole.getUsers().add(newUser);
+           return existRole;
         }).collect(Collectors.toSet()));
 
         return userMapper.convertToDto(userRepository.save(newUser));

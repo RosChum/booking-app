@@ -26,7 +26,7 @@
             </column>
             <column name="distance_from_center" type="int">
             </column>
-            <column name="rating" type="int">
+            <column name="rating" type="double">
             </column>
             <column name="number_ratings" type="int">
             </column>

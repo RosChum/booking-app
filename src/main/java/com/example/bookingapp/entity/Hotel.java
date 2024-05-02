@@ -36,7 +36,7 @@ public class Hotel extends BaseEntity {
     private Integer distanceFromCenter;
 
     @Column(name = "rating")
-    private Integer rating;
+    private Double rating;
 
     @Column(name = "number_ratings")
     private Integer numberRatings;

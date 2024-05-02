@@ -15,6 +15,7 @@ public interface UserMapper {
     @Mapping(target = "createAt", expression = "java(ZonedDateTime.now())")
     @Mapping(target = "roles", ignore = true)
     @Mapping(target = "isDeleted", defaultValue = "false")
+    @Mapping(target = "password", ignore = true)
     User convertToEntity(UserDto userDto);
     @Mapping(target = "booking", ignore = true)
     UserDto convertToDto(User user);

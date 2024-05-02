@@ -2,6 +2,7 @@ package com.example.bookingapp.service;
 
 import com.example.bookingapp.dto.hotel.HotelDto;
 import com.example.bookingapp.dto.hotel.HotelSearchDto;
+import com.example.bookingapp.dto.hotel.RatingDto;
 import com.example.bookingapp.entity.Hotel;
 import com.example.bookingapp.entity.Hotel_;
 import com.example.bookingapp.exception.ContentNotFoundException;
@@ -80,6 +81,7 @@ public class HotelService implements BaseService<HotelDto, HotelSearchDto> {
         hotel.getRoom().forEach(room -> roomService.deleteById(room.getId()));
         hotelRepository.delete(hotel);
     }
+
 
     private Specification<Hotel> getSpecification(HotelSearchDto searchDto) {
         return BaseSpecification.getBaseSpecification(searchDto).and(equal(Hotel_.name, searchDto.getName()))

@@ -18,6 +18,6 @@ public class ShortHotelDto extends BaseDto {
 
     private String address;
 
-    private Integer rating;
+    private Double rating;
 
 }
