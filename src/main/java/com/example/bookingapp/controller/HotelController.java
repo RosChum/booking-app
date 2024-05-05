@@ -4,6 +4,7 @@ import com.example.bookingapp.dto.hotel.HotelDto;
 import com.example.bookingapp.dto.hotel.HotelSearchDto;
 import com.example.bookingapp.dto.hotel.RatingDto;
 import com.example.bookingapp.service.BaseService;
+import com.example.bookingapp.service.HotelService;
 import com.example.bookingapp.service.RatingService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +19,7 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class HotelController implements BaseController<HotelDto, HotelSearchDto> {
 
-    private final BaseService<HotelDto, HotelSearchDto> hotelService;
+    private final HotelService hotelService;
     private final RatingService ratingService;
 
     @Override
@@ -55,7 +56,7 @@ public class HotelController implements BaseController<HotelDto, HotelSearchDto>
 
     @PostMapping("/rating/{hotelId}")
     private ResponseEntity<Void> setRating(@PathVariable Long hotelId, @RequestBody @Valid RatingDto ratingDto) {
-        ratingService.setRating(hotelId, ratingDto);
+        hotelService.setRating(hotelId, ratingDto);
         return ResponseEntity.ok().build();
     }
 }
