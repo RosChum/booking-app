@@ -21,6 +21,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.ZonedDateTime;
 
 import static com.example.bookingapp.specification.BaseSpecification.equal;
+import static com.example.bookingapp.specification.BaseSpecification.like;
 
 @Service
 @RequiredArgsConstructor
@@ -84,9 +85,13 @@ public class HotelService implements BaseService<HotelDto, HotelSearchDto> {
 
 
     private Specification<Hotel> getSpecification(HotelSearchDto searchDto) {
-        return BaseSpecification.getBaseSpecification(searchDto).and(equal(Hotel_.name, searchDto.getName()))
+        return BaseSpecification.getBaseSpecification(searchDto)
+                .and(equal(Hotel_.name, searchDto.getName()))
                 .and(equal(Hotel_.city, searchDto.getCity()))
-                .and(equal(Hotel_.isDeleted, false));
+                .and(equal(Hotel_.address, searchDto.getAddress()))
+                .and(equal(Hotel_.isDeleted, false))
+                .and(like(Hotel_.headline,searchDto.getHeadline()));
+
     }
 
     public void setRating(Long hotelId, RatingDto ratingDto) {

@@ -30,11 +30,13 @@ public class BaseSpecification {
                 });
     }
 
+
     public static <T> Specification<T> between(SingularAttribute<T, ZonedDateTime> field,
                                                ZonedDateTime timeFrom, ZonedDateTime timeTo) {
         if (timeTo == null && timeFrom == null) {
             return (root, query, criteriaBuilder) ->
             {
+
                 return criteriaBuilder.in(root.get(field));
             };
         }
