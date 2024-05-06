@@ -2,9 +2,12 @@ package com.example.bookingapp.specification;
 
 import com.example.bookingapp.dto.baseDto.BaseSearchDto;
 import com.example.bookingapp.entity.BaseEntity_;
+import jakarta.persistence.metamodel.Attribute;
 import jakarta.persistence.metamodel.SingularAttribute;
+import org.hibernate.metamodel.model.domain.internal.SingularAttributeImpl;
 import org.springframework.data.jpa.domain.Specification;
 
+import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.function.Supplier;
 
@@ -30,28 +33,46 @@ public class BaseSpecification {
                 });
     }
 
+    public static <T> Specification<T> greaterThanOrEqualTo(SingularAttribute<T, Integer> field, Integer value) {
+        return checkForNull(value, () ->
+                (root, query, criteriaBuilder) -> {
+                    query.distinct(true);
 
-    public static <T> Specification<T> between(SingularAttribute<T, ZonedDateTime> field,
-                                               ZonedDateTime timeFrom, ZonedDateTime timeTo) {
-        if (timeTo == null && timeFrom == null) {
-            return (root, query, criteriaBuilder) ->
-            {
+                        return criteriaBuilder.greaterThanOrEqualTo(root.get(field),  value);
 
-                return criteriaBuilder.in(root.get(field));
-            };
-        }
-        if (timeFrom == null) {
-            return (root, query, criteriaBuilder) -> {
-                return criteriaBuilder.lessThanOrEqualTo(root.get(field), timeTo);
-            };
-        }
-        if (timeTo == null) {
-            return (root, query, criteriaBuilder) -> {
-                return criteriaBuilder.greaterThanOrEqualTo(root.get(field), timeFrom);
-            };
+                });
+    }
 
-        }
-        return (root, query, criteriaBuilder) -> criteriaBuilder.between(root.get(field), timeFrom, timeTo);
+
+    public static <T> Specification<T> greaterThanOrEqualTo(SingularAttribute<T, Double> field, Double value) {
+        return checkForNull(value, () ->
+                (root, query, criteriaBuilder) -> {
+                    query.distinct(true);
+
+                    return criteriaBuilder.greaterThanOrEqualTo(root.get(field),  value);
+
+                });
+    }
+
+    public static <T> Specification<T> between(SingularAttribute<T, BigDecimal> field, BigDecimal minValue, BigDecimal maxValue) {
+        return checkForNull(minValue,maxValue, () ->
+                (root, query, criteriaBuilder) -> {
+                    query.distinct(true);
+
+                    return criteriaBuilder.between(root.get(field),  minValue, maxValue);
+
+                });
+    }
+
+
+    public static <T> Specification<T> greaterThanOrEqualTo(SingularAttribute<T, BigDecimal> field, BigDecimal value) {
+        return checkForNull(value, () ->
+                (root, query, criteriaBuilder) -> {
+                    query.distinct(true);
+
+                    return criteriaBuilder.greaterThanOrEqualTo(root.get(field),  value);
+
+                });
     }
 
     private static <T, V> Specification<T> checkForNull(V value, Supplier<Specification<T>> supplier) {

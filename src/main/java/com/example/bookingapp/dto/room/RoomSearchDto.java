@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.time.ZonedDateTime;
 
 @Getter
 @Setter
@@ -21,13 +22,17 @@ public class RoomSearchDto extends BaseSearchDto {
 
     private String description;
 
-    private BigDecimal price;
+    private BigDecimal minPrice;
+
+    private BigDecimal maxPrice;
 
     private Integer roomCapacity;
 
-    private ShortHotelDto hotel;
+    private Long hotelId;
 
-    private BookingDto booking;
+    private ZonedDateTime arrivalDate;
+
+    private ZonedDateTime departureDate;
 
 
 }

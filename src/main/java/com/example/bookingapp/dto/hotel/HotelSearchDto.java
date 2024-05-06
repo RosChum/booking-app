@@ -28,7 +28,7 @@ public class HotelSearchDto extends BaseSearchDto {
 
     private Integer distanceFromCenter;
 
-    private Integer rating;
+    private Double rating;
 
     private Integer numberRatings;
 
