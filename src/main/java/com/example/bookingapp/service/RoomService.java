@@ -114,8 +114,8 @@ public class RoomService implements BaseService<RoomDto, RoomSearchDto> {
             }
             Join<Room, Booking> bookingJoin = root.join(Room_.booking);
             Predicate[] predicates = new Predicate[2];
-            predicates[0] = criteriaBuilder.lessThan(bookingJoin.get(Booking_.departureDate), timeFrom);
-            predicates[1] = criteriaBuilder.greaterThan(bookingJoin.get(Booking_.arrivalDate), timeTo);
+            predicates[0] = criteriaBuilder.lessThan(bookingJoin.get(Booking_.arrivalDate), timeTo).not();
+            predicates[1] = criteriaBuilder.greaterThan(bookingJoin.get(Booking_.departureDate), timeFrom).not();
             return criteriaBuilder.and(predicates);
         });
     }
