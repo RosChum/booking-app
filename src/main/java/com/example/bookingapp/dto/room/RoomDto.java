@@ -17,6 +17,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Getter
 @Setter
@@ -37,6 +38,6 @@ public class RoomDto extends BaseDto {
 
     private ShortHotelDto hotel;
 
-    private BookingDto booking;
+    private List <BookingDto> booking;
 
 }

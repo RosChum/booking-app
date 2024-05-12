@@ -95,16 +95,6 @@ public class HotelService implements BaseService<HotelDto, HotelSearchDto> {
 
     }
 
-    public void setRating(Long hotelId, RatingDto ratingDto) {
-        Hotel hotel = hotelRepository.findById(hotelId).orElseThrow(() -> new ContentNotFoundException("Hotel not found!"));
-        Double rating = hotel.getRating();
-        Integer newMark = ratingDto.getRating();
-        Integer numberOfRating = hotel.getNumberRatings();
-        Double totalRating = (rating * numberOfRating) - rating + newMark;
-        hotel.setRating(Math.ceil((totalRating / numberOfRating) * Math.pow(10, 1)) / Math.pow(10, 1));
-        hotel.setNumberRatings(numberOfRating + 1);
-        hotelRepository.save(hotel);
 
-    }
 
 }

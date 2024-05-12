@@ -6,8 +6,10 @@ import com.example.bookingapp.dto.hotel.RatingDto;
 import com.example.bookingapp.service.BaseService;
 import com.example.bookingapp.service.HotelService;
 import com.example.bookingapp.service.RatingService;
+import jakarta.annotation.PostConstruct;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -19,8 +21,10 @@ import org.springframework.web.bind.annotation.*;
 @RequiredArgsConstructor
 public class HotelController implements BaseController<HotelDto, HotelSearchDto> {
 
-    private final HotelService hotelService;
+
+    private final BaseService<HotelDto, HotelSearchDto> hotelService;
     private final RatingService ratingService;
+
 
     @Override
     @GetMapping
@@ -55,8 +59,9 @@ public class HotelController implements BaseController<HotelDto, HotelSearchDto>
     }
 
     @PostMapping("/rating/{hotelId}")
-    private ResponseEntity<Void> setRating(@PathVariable Long hotelId, @RequestBody @Valid RatingDto ratingDto) {
-        hotelService.setRating(hotelId, ratingDto);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<HotelDto> setRating(@PathVariable Long hotelId, @RequestBody @Valid RatingDto ratingDto) {
+        return ResponseEntity.ok(ratingService.setRating(hotelId, ratingDto));
     }
+
+
 }

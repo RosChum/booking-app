@@ -4,13 +4,16 @@ import com.example.bookingapp.dto.room.RoomDto;
 import com.example.bookingapp.dto.room.RoomSearchDto;
 import com.example.bookingapp.entity.*;
 import com.example.bookingapp.exception.ContentNotFoundException;
+import com.example.bookingapp.mapper.BookingMapper;
 import com.example.bookingapp.mapper.RoomMapper;
 import com.example.bookingapp.repository.HotelRepository;
 import com.example.bookingapp.repository.RoomRepository;
 import com.example.bookingapp.specification.BaseSpecification;
 import jakarta.persistence.criteria.Join;
 import jakarta.persistence.criteria.Predicate;
+import jakarta.persistence.criteria.Subquery;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -31,6 +34,7 @@ public class RoomService implements BaseService<RoomDto, RoomSearchDto> {
     private final RoomRepository roomRepository;
     private final RoomMapper roomMapper;
     private final HotelRepository hotelRepository;
+    private final BookingMapper bookingMapper;
 
     @Override
     public Page<RoomDto> findAll(RoomSearchDto dto, Pageable pageable) {
@@ -39,6 +43,7 @@ public class RoomService implements BaseService<RoomDto, RoomSearchDto> {
 
         return new PageImpl<>(rooms.map(room -> {
             RoomDto roomDto = roomMapper.convertToDto(room);
+            roomDto.setBooking(room.getBooking().stream().map(bookingMapper::convertToDto).collect(Collectors.toList()));
             return roomDto;
         }).toList(), pageable, rooms.getTotalElements());
     }
@@ -113,10 +118,13 @@ public class RoomService implements BaseService<RoomDto, RoomSearchDto> {
                 return null;
             }
             Join<Room, Booking> bookingJoin = root.join(Room_.booking);
-            Predicate[] predicates = new Predicate[2];
-            predicates[0] = criteriaBuilder.lessThan(bookingJoin.get(Booking_.arrivalDate), timeTo).not();
-            predicates[1] = criteriaBuilder.greaterThan(bookingJoin.get(Booking_.departureDate), timeFrom).not();
-            return criteriaBuilder.and(predicates);
+//            Predicate[] predicates = new Predicate[2];
+//            predicates[0] = criteriaBuilder.or(criteriaBuilder.between(bookingJoin.get(Booking_.arrivalDate), timeTo, timeFrom),criteriaBuilder.between(bookingJoin.get(Booking_.departureDate), timeTo, timeFrom),  criteriaBuilder.and(criteriaBuilder.lessThanOrEqualTo(bookingJoin.get(Booking_.arrivalDate),timeFrom), criteriaBuilder.greaterThanOrEqualTo(bookingJoin.get(Booking_.departureDate), timeTo)));
+//            predicates[1] = ;
+            query.distinct(true);
+
+          return bookingJoin.get(Booking_.isDeleted).in(criteriaBuilder.or(criteriaBuilder.between(bookingJoin.get(Booking_.arrivalDate), timeTo, timeFrom),criteriaBuilder.between(bookingJoin.get(Booking_.departureDate), timeTo, timeFrom),  criteriaBuilder.and(criteriaBuilder.lessThanOrEqualTo(bookingJoin.get(Booking_.arrivalDate),timeFrom), criteriaBuilder.greaterThanOrEqualTo(bookingJoin.get(Booking_.departureDate), timeTo)))).not();
+
         });
     }
 

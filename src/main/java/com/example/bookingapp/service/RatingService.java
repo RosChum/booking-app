@@ -1,8 +1,10 @@
 package com.example.bookingapp.service;
 
+import com.example.bookingapp.dto.hotel.HotelDto;
 import com.example.bookingapp.dto.hotel.RatingDto;
 import com.example.bookingapp.entity.Hotel;
 import com.example.bookingapp.exception.ContentNotFoundException;
+import com.example.bookingapp.mapper.HotelMapper;
 import com.example.bookingapp.repository.HotelRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,8 +14,9 @@ import org.springframework.stereotype.Service;
 public class RatingService {
 
     private final HotelRepository hotelRepository;
+    private final HotelMapper hotelMapper;
 
-    public void setRating(Long hotelId, RatingDto ratingDto) {
+    public HotelDto setRating(Long hotelId, RatingDto ratingDto) {
         Hotel hotel = hotelRepository.findById(hotelId).orElseThrow(() -> new ContentNotFoundException("Hotel not found!"));
         Double rating = hotel.getRating();
         Integer newMark = ratingDto.getRating();
@@ -21,7 +24,7 @@ public class RatingService {
         Double totalRating = (rating * numberOfRating) - rating + newMark;
         hotel.setRating(Math.ceil((totalRating / numberOfRating) * Math.pow(10, 1)) / Math.pow(10, 1));
         hotel.setNumberRatings(numberOfRating + 1);
-        hotelRepository.save(hotel);
+        return hotelMapper.convertToDto(hotelRepository.save(hotel));
 
     }
 }
