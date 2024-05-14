@@ -14,7 +14,7 @@ import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.persistence.criteria.Subquery;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -30,6 +30,7 @@ import static com.example.bookingapp.specification.BaseSpecification.*;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class RoomService implements BaseService<RoomDto, RoomSearchDto> {
 
     private final RoomRepository roomRepository;
@@ -42,7 +43,11 @@ public class RoomService implements BaseService<RoomDto, RoomSearchDto> {
 
         Page<Room> rooms = roomRepository.findAll(getSpecification(dto), pageable);
 
+
         return new PageImpl<>(rooms.map(room -> {
+
+
+
             RoomDto roomDto = roomMapper.convertToDto(room);
             roomDto.setBooking(room.getBooking().stream().map(bookingMapper::convertToDto).collect(Collectors.toList()));
             return roomDto;
@@ -99,7 +104,8 @@ public class RoomService implements BaseService<RoomDto, RoomSearchDto> {
                 .and(equal(Room_.roomCapacity, searchDto.getRoomCapacity()))
                 .and(between(Room_.price, searchDto.getMinPrice(), searchDto.getMaxPrice()))
                 .and(joinHotel(searchDto.getHotelId()))
-                .and(joinBooking(searchDto.getArrivalDate(), searchDto.getDepartureDate()));
+                .and(checkBooking(searchDto.getArrivalDate(), searchDto.getDepartureDate()))
+                ;
     }
 
 
@@ -113,53 +119,31 @@ public class RoomService implements BaseService<RoomDto, RoomSearchDto> {
         });
     }
 
-    private Specification<Room> joinBooking(ZonedDateTime timeFrom, ZonedDateTime timeTo) {
+    private Specification<Room> checkBooking(ZonedDateTime timeFrom, ZonedDateTime timeTo) {
         return ((root, query, criteriaBuilder) -> {
             if (timeFrom == null || timeTo == null) {
                 return null;
             }
             Join<Room, Booking> bookingJoin = root.join(Room_.booking);
-//            Predicate[] predicates = new Predicate[3];
-//            predicates[0] = criteriaBuilder.lessThanOrEqualTo(bookingJoin.get(Booking_.arrivalDate), timeTo);
-//            predicates[1] = criteriaBuilder.greaterThanOrEqualTo(bookingJoin.get(Booking_.departureDate), timeFrom);
-//            predicates[2] = criteriaBuilder.or(criteriaBuilder.between(bookingJoin.get(Booking_.arrivalDate), timeTo, timeFrom), criteriaBuilder.between(bookingJoin.get(Booking_.departureDate), timeTo, timeFrom), criteriaBuilder.and(criteriaBuilder.lessThanOrEqualTo(bookingJoin.get(Booking_.arrivalDate), timeTo),criteriaBuilder.greaterThanOrEqualTo(bookingJoin.get(Booking_.departureDate), timeFrom)));
 
-
-//            Predicate predicate =criteriaBuilder.or(criteriaBuilder.between(bookingJoin.get(Booking_.arrivalDate), timeTo, timeFrom), criteriaBuilder.between(bookingJoin.get(Booking_.departureDate), timeTo, timeFrom), criteriaBuilder.and(criteriaBuilder.lessThanOrEqualTo(bookingJoin.get(Booking_.arrivalDate), timeFrom),criteriaBuilder.greaterThanOrEqualTo(bookingJoin.get(Booking_.departureDate), timeTo)));
-
-//            query.distinct(true);
-
-
-//            return root.get(Room_.id).in(bookingJoin.get(Booking_.room).get("id").in(predicate));
-//            criteriaBuilder.and(criteriaBuilder.lessThanOrEqualTo(bookingJoin.get(Booking_.arrivalDate),timeFrom), criteriaBuilder.greaterThanOrEqualTo(bookingJoin.get(Booking_.departureDate), timeTo))
-
-//          return root.get(Room_.id).in(criteriaBuilder.or(criteriaBuilder.between(bookingJoin.get(Booking_.arrivalDate), timeTo, timeFrom),criteriaBuilder.between(bookingJoin.get(Booking_.departureDate), timeTo, timeFrom)));
-
-//            return  criteriaBuilder.not(root.get(Room_.id)).in(query.select(bookingJoin.get(Booking_.room).get("id")).where(criteriaBuilder.or(criteriaBuilder.between(bookingJoin.get(Booking_.arrivalDate), timeTo, timeFrom),criteriaBuilder.between(bookingJoin.get(Booking_.departureDate), timeTo, timeFrom))));
-//            return root.get(Room_.id).in(query.select(bookingJoin.get(Booking_.room).get("id")).where(criteriaBuilder.or(criteriaBuilder.between(bookingJoin.get(Booking_.arrivalDate), timeTo, timeFrom),criteriaBuilder.between(bookingJoin.get(Booking_.departureDate), timeTo, timeFrom))) );
-
-//            return bookingJoin.get(Booking_.room).get("id").in(predicate);
-
-
-
-
-
-            Predicate predicate = criteriaBuilder.or(
-                    criteriaBuilder.between(bookingJoin.get(Booking_.arrivalDate), timeFrom, timeTo),
-                    criteriaBuilder.between(bookingJoin.get(Booking_.departureDate), timeFrom, timeTo),
-                    criteriaBuilder.and(
-                            criteriaBuilder.lessThanOrEqualTo(bookingJoin.get(Booking_.arrivalDate), timeFrom),
+            Predicate predicate = criteriaBuilder.or(criteriaBuilder.between(bookingJoin.get(Booking_.arrivalDate), timeFrom, timeTo),
+                    criteriaBuilder.between(bookingJoin.get(Booking_.departureDate), timeFrom, timeTo)
+                    ,
+                    criteriaBuilder.and(criteriaBuilder.lessThanOrEqualTo(bookingJoin.get(Booking_.arrivalDate), timeFrom),
                             criteriaBuilder.greaterThanOrEqualTo(bookingJoin.get(Booking_.departureDate), timeTo)
                     )
             );
+
+//            Predicate predicate1 = criteriaBuilder.and(criteriaBuilder.lessThanOrEqualTo(bookingJoin.get(Booking_.arrivalDate), timeTo),
+//                    criteriaBuilder.greaterThanOrEqualTo(bookingJoin.get(Booking_.departureDate), timeFrom));
+//
 
             Subquery<Long> subquery = query.subquery(Long.class);
             Root<Booking> bookingRoot = subquery.from(Booking.class);
             subquery.select(bookingRoot.get(Booking_.room).get(Room_.id));
             subquery.where(predicate);
 
-            return criteriaBuilder.not(root.get(Room_.id).in(subquery));
-
+            return root.get(Room_.id).in(subquery).not();
 
         });
     }
