@@ -47,7 +47,6 @@ public class RoomService implements BaseService<RoomDto, RoomSearchDto> {
         return new PageImpl<>(rooms.map(room -> {
 
 
-
             RoomDto roomDto = roomMapper.convertToDto(room);
             roomDto.setBooking(room.getBooking().stream().map(bookingMapper::convertToDto).collect(Collectors.toList()));
             return roomDto;
@@ -133,6 +132,7 @@ public class RoomService implements BaseService<RoomDto, RoomSearchDto> {
                             criteriaBuilder.greaterThanOrEqualTo(bookingJoin.get(Booking_.departureDate), timeTo)
                     )
             );
+// TODO проверить логику предикатов
 
 //            Predicate predicate1 = criteriaBuilder.and(criteriaBuilder.lessThanOrEqualTo(bookingJoin.get(Booking_.arrivalDate), timeTo),
 //                    criteriaBuilder.greaterThanOrEqualTo(bookingJoin.get(Booking_.departureDate), timeFrom));
