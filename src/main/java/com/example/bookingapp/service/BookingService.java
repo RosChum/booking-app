@@ -38,7 +38,6 @@ public class BookingService {
 
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public BookingDto createBooking(BookingDto bookingDto) {
-
         Map<Boolean, List<Booking>> checkAvailable = checkAvailableForBooking(bookingDto.getArrivalDate()
                 , bookingDto.getDepartureDate(), bookingDto.getRoom().getId());
 

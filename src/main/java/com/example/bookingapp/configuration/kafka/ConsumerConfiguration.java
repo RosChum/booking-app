@@ -54,6 +54,7 @@ public class ConsumerConfiguration {
         factoryConfiguration.put(ConsumerConfig.GROUP_ID_CONFIG, groupId);
         factoryConfiguration.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
         factoryConfiguration.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
+        factoryConfiguration.put(JsonDeserializer.TRUSTED_PACKAGES, "*");
         return factoryConfiguration;
     }
 }

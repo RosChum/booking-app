@@ -1,6 +1,8 @@
 package com.example.bookingapp.service.statistic;
 
 import com.example.bookingapp.dto.booking.BookingDto;
+import com.example.bookingapp.dto.kafkaEvent.BookingRoomEvent;
+import com.example.bookingapp.dto.kafkaEvent.RegistrationUserEvent;
 import com.example.bookingapp.dto.user.UserDto;
 import com.example.bookingapp.entity.mongodb.BookingRoomInformation;
 import com.example.bookingapp.entity.mongodb.RegistrationUserInformation;
@@ -27,10 +29,13 @@ public class StatisticService {
     private final SequenceDAO sequenceDAO;
 
 
+    //TODO Caused by: org.bson.codecs.configuration.CodecConfigurationException: Can't find a codec for CodecCacheKey{clazz=class java.time.ZonedDateTime, types=null}.
+    //необходимо конвертировать ZonedDateTime перед сохранением в монго
+
     @KafkaListener(topics = "${app.kafka_topics.registration-user-topic}", groupId = "${spring.kafka.consumer.group-id}"
             , containerFactory = "registrationUserEventConcurrentKafkaListenerContainerFactory")
-    public void registrationUserTopicListener(@Payload UserDto userDto) {
-        RegistrationUserInformation userInformation = statisticMapper.convertToRegistrationUserInf(userDto);
+    public void registrationUserTopicListener(@Payload RegistrationUserEvent registrationUserEvent) {
+        RegistrationUserInformation userInformation = statisticMapper.fromUserEventToRegistrationUserInf(registrationUserEvent);
         userInformation.setId(sequenceDAO.getNewSequence(RegistrationUserInformation.REGISTRATION_USER_SEQ_KEY));
         registrationUserRepository.save(userInformation);
 
@@ -39,8 +44,8 @@ public class StatisticService {
 
     @KafkaListener(topics = "${app.kafka_topics.booking-room-topic}", groupId = "${spring.kafka.consumer.group-id}"
             , containerFactory = "bookingRoomEventConcurrentKafkaListenerContainerFactory")
-    private void bookingRoomEventListener(@Payload BookingDto bookingDto) {
-        BookingRoomInformation bookingRoomInformation = statisticMapper.convertToBookingRoomInformation(bookingDto);
+    private void bookingRoomEventListener(@Payload BookingRoomEvent bookingRoomEvent) {
+        BookingRoomInformation bookingRoomInformation = statisticMapper.fromRoomEventToBookingRoomInformation(bookingRoomEvent);
         bookingRoomInformation.setId(sequenceDAO.getNewSequence(BookingRoomInformation.BOOKING_ROOM_SEQ_KEY));
         bookingRoomInformation.setCreateAt(ZonedDateTime.now());
         bookingRoomRepository.save(bookingRoomInformation);
