@@ -3,6 +3,8 @@ spring:
     redis:
       host: localhost
       port: 6379
+    mongodb:
+      uri: mongodb://root:root@localhost:27017/bookingapp?authSource=admin
 
   datasource:
     url: jdbc:postgresql://localhost:5432/booking
