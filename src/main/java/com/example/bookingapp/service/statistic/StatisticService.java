@@ -8,7 +8,6 @@ import com.example.bookingapp.mapper.StatisticMapper;
 import com.example.bookingapp.repository.mongodb.BookingRoomRepository;
 import com.example.bookingapp.repository.mongodb.RegistrationUserRepository;
 import com.example.bookingapp.repository.mongodb.SequenceDAO;
-import com.example.bookingapp.repository.mongodb.SequenceRepository;
 import com.example.bookingapp.util.ZonedDateTimeToDateConverter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,7 +27,6 @@ public class StatisticService {
     private final BookingRoomRepository bookingRoomRepository;
     private final StatisticMapper statisticMapper;
     private final SequenceDAO sequenceDAO;
-    private final SequenceRepository sequenceRepository;
     private final ZonedDateTimeToDateConverter converter = new ZonedDateTimeToDateConverter();
 
     @KafkaListener(topics = "${app.kafka_topics.registration-user-topic}", groupId = "${spring.kafka.consumer.group-id}"
