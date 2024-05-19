@@ -38,19 +38,29 @@ public class StatisticAop {
 
     }
 
+    @Pointcut("execution(* com.example.bookingapp.service.BookingService.createBooking*(..))")
+    public void callingCreateBooking(){
+
+    }
+
     @AfterReturning(value = "callingUserRegistration()", returning = "returnValue")
     public void afterReturningUserRegistration(JoinPoint joinPoint, Object returnValue) {
 
         if (returnValue instanceof UserDto) {
             UserDto userDto = (UserDto) returnValue;
-
-    RegistrationUserEvent userEvent = statisticMapper.convertToRegistrationUserEvent(userDto);
-
-    registrationUserEventKafkaTemplate.send(registrationUserTopic,userEvent);
-
+            RegistrationUserEvent userEvent = statisticMapper.convertToRegistrationUserEvent(userDto);
+            registrationUserEventKafkaTemplate.send(registrationUserTopic, userEvent);
         }
+    }
 
+    @AfterReturning(value = "callingCreateBooking()", returning = "returnValue")
+    public void afterReturningCreateBooking(JoinPoint joinPoint, Object returnValue) {
 
+        if (returnValue instanceof BookingDto) {
+            BookingDto bookingDto = (BookingDto) returnValue;
+            BookingRoomEvent bookingRoomEvent = statisticMapper.convertToBookingRoomEvent(bookingDto);
+            bookingRoomEventKafkaTemplate.send(bookingRoomTopic, bookingRoomEvent);
+        }
 
     }
 

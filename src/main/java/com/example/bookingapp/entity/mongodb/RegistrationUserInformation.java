@@ -9,6 +9,7 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.ZonedDateTime;
+import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -28,6 +29,6 @@ public class RegistrationUserInformation {
 
     private String email;
 
-    private ZonedDateTime createAt;
+    private Date createAt;
 
 }

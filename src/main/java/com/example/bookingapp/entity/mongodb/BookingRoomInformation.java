@@ -8,6 +8,7 @@ import org.springframework.data.annotation.Transient;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.time.ZonedDateTime;
+import java.util.Date;
 
 @NoArgsConstructor
 @AllArgsConstructor
@@ -19,7 +20,7 @@ public class BookingRoomInformation {
     public static final String BOOKING_ROOM_SEQ_KEY = "booking";
 
     @Id
-    private Long Id;
+    private Long id;
 
     private Long userId;
 
@@ -27,10 +28,10 @@ public class BookingRoomInformation {
 
     private Long hotelId;
 
-    private ZonedDateTime arrivalDate;
+    private Date arrivalDate;
 
-    private ZonedDateTime departureDate;
+    private Date departureDate;
 
-    private ZonedDateTime createAt;
+    private Date createAt;
 
 }

@@ -20,7 +20,9 @@ public interface StatisticMapper {
     @Mapping(target = "userId", expression = "java(bookingDto.getUser().getId())")
     BookingRoomEvent convertToBookingRoomEvent(BookingDto bookingDto);
 
+    @Mapping(target = "createAt", ignore = true)
     RegistrationUserInformation fromUserEventToRegistrationUserInf(RegistrationUserEvent registrationUserEvent);
-
+    @Mapping(target = "arrivalDate", ignore = true)
+    @Mapping(target = "departureDate", ignore = true)
     BookingRoomInformation fromRoomEventToBookingRoomInformation(BookingRoomEvent bookingRoomEvent);
 }
