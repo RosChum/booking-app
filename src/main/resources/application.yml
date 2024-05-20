@@ -44,4 +44,7 @@ app:
   kafka_topics:
     registration-user-topic: "registration-user"
     booking-room-topic: "booking-room"
+  statistic:
+    registrationUserInformationPath: src/main/resources/statistic/registrationUser.csv
+    bookingRoomInformationPath: src/main/resources/statistic/bookingRoomInformation.csv
 

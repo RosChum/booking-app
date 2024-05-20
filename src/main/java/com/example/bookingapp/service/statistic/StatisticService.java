@@ -9,19 +9,36 @@ import com.example.bookingapp.repository.mongodb.BookingRoomRepository;
 import com.example.bookingapp.repository.mongodb.RegistrationUserRepository;
 import com.example.bookingapp.repository.mongodb.SequenceDAO;
 import com.example.bookingapp.util.ZonedDateTimeToDateConverter;
+import com.opencsv.CSVWriter;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
+import java.io.FileWriter;
+import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 @Service
 @Slf4j
 @RequiredArgsConstructor
 public class StatisticService {
+
+    @Value("${app.statistic.registrationUserInformationPath}")
+    private String registrationUserInformationPath;
+    @Value("${app.statistic.bookingRoomInformationPath}")
+    private String bookingRoomInformationPath;
 
     private final RegistrationUserRepository registrationUserRepository;
     private final BookingRoomRepository bookingRoomRepository;
@@ -37,9 +54,8 @@ public class StatisticService {
         userInformation.setCreateAt(converter.convert(registrationUserEvent.getCreateAt()));
         registrationUserRepository.save(userInformation);
 
-        log.info("StatisticService  create registrationUser {} ", userInformation);
+        downloadStatistic();
 
-        log.info(" registrationUserRepository " + registrationUserRepository.findAll());
     }
 
     @KafkaListener(topics = "${app.kafka_topics.booking-room-topic}", groupId = "${spring.kafka.consumer.group-id}"
@@ -50,15 +66,55 @@ public class StatisticService {
         bookingRoomInformation.setCreateAt(Date.from(Instant.now()));
         bookingRoomInformation.setArrivalDate(converter.convert(bookingRoomEvent.getArrivalDate()));
         bookingRoomInformation.setDepartureDate(converter.convert(bookingRoomEvent.getDepartureDate()));
-
-        log.info(  " -----------------sequenceDAO BookingRoomInformation " + sequenceDAO.getS(BookingRoomInformation.BOOKING_ROOM_SEQ_KEY));
-
         bookingRoomRepository.save(bookingRoomInformation);
+    }
 
-        log.info("StatisticService  create bookingRoom {} ", bookingRoomInformation);
+    @SneakyThrows
+    public void downloadStatistic() {
 
-        log.info(" bookingRoomEventListener " + bookingRoomRepository.findAll());
+        CompletableFuture<File> registrationUserCompletableFuture = CompletableFuture.supplyAsync(() ->
+
+
+
+                createCsvFile(registrationUserRepository.findAll(), Path.of(registrationUserInformationPath)));
+
+
+        CompletableFuture<File> bookingRoomCompletableFuture = CompletableFuture.supplyAsync(() ->
+                createCsvFile(bookingRoomRepository.findAll(), Path.of(bookingRoomInformationPath)));
+
+        CompletableFuture.allOf(registrationUserCompletableFuture, bookingRoomCompletableFuture).get();
+
 
     }
+
+    @SneakyThrows
+    private File createCsvFile(List<?> objects, Path path) {
+        List<String[]> lines = new ArrayList<>();
+
+        objects.forEach(object -> {
+            List<Field> fields = Arrays.asList(object.getClass().getDeclaredFields());
+
+            String[] row = new String[fields.size()];
+
+            for (int i = 0; i < fields.size(); i++) {
+                row[i] = fields.get(i).toString();
+            }
+
+            lines.add(row);
+        });
+
+        if (!Files.exists(path)) {
+            Files.createFile(path);
+        }
+
+        CSVWriter writer = new CSVWriter(new FileWriter(path.toString()));
+
+        writer.writeAll(lines);
+        writer.close();
+
+        return new File(path.toString());
+
+    }
+
 
 }

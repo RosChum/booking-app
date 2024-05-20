@@ -23,46 +23,28 @@ public class SequenceDAO {
     private MongoOperations mongoOperations;
 
     public Long getNewSequence(String kye) {
-
         Query query = new Query(Criteria.where("_id").is(kye));
-
         Update update = new Update();
         update.inc("seq", 1L);
-
         FindAndModifyOptions options = new FindAndModifyOptions();
         options.returnNew(true);
-
         SequenceId newSequence = mongoOperations.findAndModify(query, update, SequenceId.class);
-
-        log.info("MongoOperations SequenceId " + newSequence);
-
         return Objects.isNull(newSequence) ? 1L : newSequence.getSeq();
-
     }
 
     @PostConstruct
     public void createEntity() {
-
         List<SequenceId> exestEntity = mongoOperations.findAll(SequenceId.class);
-
-        log.info("createEntity SequenceId " + exestEntity.size());
         if (exestEntity == null) {
-
             SequenceId bookingRoomInformationSequenceId = new SequenceId();
             bookingRoomInformationSequenceId.setId("booking");
             bookingRoomInformationSequenceId.setSeq(0L);
             SequenceId registrationUserInformationSequenceId = new SequenceId();
             registrationUserInformationSequenceId.setId("regUser");
             registrationUserInformationSequenceId.setSeq(0L);
-
             mongoOperations.insert(bookingRoomInformationSequenceId);
             mongoOperations.insert(registrationUserInformationSequenceId);
         }
     }
 
-    public List<SequenceId> getS(String kye) {
-        Query query = new Query(Criteria.where("_id").is(kye));
-        return mongoOperations.find(query, SequenceId.class);
-
-    }
 }
