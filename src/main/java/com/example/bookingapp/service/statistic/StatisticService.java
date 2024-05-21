@@ -8,27 +8,32 @@ import com.example.bookingapp.mapper.StatisticMapper;
 import com.example.bookingapp.repository.mongodb.BookingRoomRepository;
 import com.example.bookingapp.repository.mongodb.RegistrationUserRepository;
 import com.example.bookingapp.repository.mongodb.SequenceDAO;
+import com.example.bookingapp.util.CustomColumnPositionStrategy;
 import com.example.bookingapp.util.ZonedDateTimeToDateConverter;
 import com.opencsv.CSVWriter;
+import com.opencsv.bean.StatefulBeanToCsv;
+import com.opencsv.bean.StatefulBeanToCsvBuilder;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.kafka.annotation.KafkaListener;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Service;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.lang.reflect.Field;
+import java.io.*;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.Instant;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.zip.ZipEntry;
+import java.util.zip.ZipOutputStream;
 
 @Service
 @Slf4j
@@ -39,6 +44,9 @@ public class StatisticService {
     private String registrationUserInformationPath;
     @Value("${app.statistic.bookingRoomInformationPath}")
     private String bookingRoomInformationPath;
+    @Value("${app.statistic.source}")
+    private String sourceStatisticPath;
+
 
     private final RegistrationUserRepository registrationUserRepository;
     private final BookingRoomRepository bookingRoomRepository;
@@ -54,8 +62,6 @@ public class StatisticService {
         userInformation.setCreateAt(converter.convert(registrationUserEvent.getCreateAt()));
         registrationUserRepository.save(userInformation);
 
-        downloadStatistic();
-
     }
 
     @KafkaListener(topics = "${app.kafka_topics.booking-room-topic}", groupId = "${spring.kafka.consumer.group-id}"
@@ -70,49 +76,68 @@ public class StatisticService {
     }
 
     @SneakyThrows
-    public void downloadStatistic() {
+    public Resource downloadStatistic() {
 
         CompletableFuture<File> registrationUserCompletableFuture = CompletableFuture.supplyAsync(() ->
 
-
-
                 createCsvFile(registrationUserRepository.findAll(), Path.of(registrationUserInformationPath)));
-
 
         CompletableFuture<File> bookingRoomCompletableFuture = CompletableFuture.supplyAsync(() ->
                 createCsvFile(bookingRoomRepository.findAll(), Path.of(bookingRoomInformationPath)));
 
         CompletableFuture.allOf(registrationUserCompletableFuture, bookingRoomCompletableFuture).get();
 
-
+        return createZipResponse();
     }
 
     @SneakyThrows
     private File createCsvFile(List<?> objects, Path path) {
-        List<String[]> lines = new ArrayList<>();
+        if (objects == null) {
+            return null;
+        }
+        try (Writer writer = Files.newBufferedWriter(path)) {
+            var strategyMapping = new CustomColumnPositionStrategy<>();
+            strategyMapping.setType(objects.get(0).getClass());
+            StatefulBeanToCsv beanToCsv = new StatefulBeanToCsvBuilder<>(writer)
+                    .withSeparator(';')
+                    .withMappingStrategy(strategyMapping)
+                    .withQuotechar(CSVWriter.NO_QUOTE_CHARACTER)
+                    .build();
+            beanToCsv.write(objects);
+        }
+        return new File(path.toString());
+    }
 
-        objects.forEach(object -> {
-            List<Field> fields = Arrays.asList(object.getClass().getDeclaredFields());
+    @SneakyThrows
+    private Resource createZipResponse() {
+        File fileToZip = new File(sourceStatisticPath);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ZipOutputStream zipOutputStream = new ZipOutputStream(byteArrayOutputStream);
+        if (fileToZip.isDirectory()) {
+            Arrays.stream(Objects.requireNonNull(fileToZip.listFiles())).forEach(file -> {
 
-            String[] row = new String[fields.size()];
+                if (file.isFile()) {
+                    try {
+                        zipOutputStream.putNextEntry(new ZipEntry(file.getName()));
+                        zipOutputStream.closeEntry();
 
-            for (int i = 0; i < fields.size(); i++) {
-                row[i] = fields.get(i).toString();
-            }
-
-            lines.add(row);
-        });
-
-        if (!Files.exists(path)) {
-            Files.createFile(path);
+                    } catch (IOException e) {
+                        throw new RuntimeException(e);
+                    }
+                }
+            });
         }
 
-        CSVWriter writer = new CSVWriter(new FileWriter(path.toString()));
+        try (BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(fileToZip))) {
+            byte[] buffer = new byte[1024];
+            int bytesRead;
+            while ((bytesRead = bufferedInputStream.read(buffer)) != -1) {
+                zipOutputStream.write(buffer, 0, bytesRead);
+            }
+        }
 
-        writer.writeAll(lines);
-        writer.close();
+        return new ByteArrayResource(byteArrayOutputStream.toByteArray());
 
-        return new File(path.toString());
 
     }
 

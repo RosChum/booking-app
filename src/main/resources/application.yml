@@ -45,6 +45,7 @@ app:
     registration-user-topic: "registration-user"
     booking-room-topic: "booking-room"
   statistic:
+    source: src/main/resources/statistic
     registrationUserInformationPath: src/main/resources/statistic/registrationUser.csv
     bookingRoomInformationPath: src/main/resources/statistic/bookingRoomInformation.csv
 
