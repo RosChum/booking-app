@@ -11,16 +11,17 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping( BaseUrl.BASE_URL +"statistic")
+@RequestMapping(BaseUrl.BASE_URL + "statistic")
 @RequiredArgsConstructor
 public class StatisticController {
 
     private final StatisticService statisticService;
+
     @GetMapping
-    public ResponseEntity<Resource> getStatistic(){
+    public ResponseEntity<Resource> getStatistic() {
         HttpHeaders httpHeaders = new HttpHeaders();
         httpHeaders.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        httpHeaders.setContentDispositionFormData("attachment", "data.zip");
+        httpHeaders.setContentDispositionFormData("attachment", "statistic.zip");
         return ResponseEntity.ok().headers(httpHeaders).body(statisticService.downloadStatistic());
     }
 }

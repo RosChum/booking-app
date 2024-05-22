@@ -34,12 +34,12 @@ public class StatisticAop {
     private String bookingRoomTopic;
 
     @Pointcut("execution(* com.example.bookingapp.service.UserService.create*(..))")
-    public void callingUserRegistration(){
+    public void callingUserRegistration() {
 
     }
 
     @Pointcut("execution(* com.example.bookingapp.service.BookingService.createBooking*(..))")
-    public void callingCreateBooking(){
+    public void callingCreateBooking() {
 
     }
 

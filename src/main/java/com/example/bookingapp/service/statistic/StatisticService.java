@@ -77,16 +77,13 @@ public class StatisticService {
 
     @SneakyThrows
     public Resource downloadStatistic() {
-
         CompletableFuture<File> registrationUserCompletableFuture = CompletableFuture.supplyAsync(() ->
-
                 createCsvFile(registrationUserRepository.findAll(), Path.of(registrationUserInformationPath)));
 
         CompletableFuture<File> bookingRoomCompletableFuture = CompletableFuture.supplyAsync(() ->
                 createCsvFile(bookingRoomRepository.findAll(), Path.of(bookingRoomInformationPath)));
 
         CompletableFuture.allOf(registrationUserCompletableFuture, bookingRoomCompletableFuture).get();
-
         return createZipResponse();
     }
 
@@ -115,31 +112,22 @@ public class StatisticService {
         ZipOutputStream zipOutputStream = new ZipOutputStream(byteArrayOutputStream);
         if (fileToZip.isDirectory()) {
             Arrays.stream(Objects.requireNonNull(fileToZip.listFiles())).forEach(file -> {
-
                 if (file.isFile()) {
-                    try {
+                    try (FileInputStream fileInputStream = new FileInputStream(file)) {
                         zipOutputStream.putNextEntry(new ZipEntry(file.getName()));
-                        zipOutputStream.closeEntry();
-
+                        byte[] buffer = new byte[1024];
+                        int bytesRead;
+                        while ((bytesRead = fileInputStream.read(buffer)) != -1) {
+                            zipOutputStream.write(buffer, 0, bytesRead);
+                        }
                     } catch (IOException e) {
                         throw new RuntimeException(e);
                     }
                 }
             });
         }
-
-        try (BufferedInputStream bufferedInputStream = new BufferedInputStream(new FileInputStream(fileToZip))) {
-            byte[] buffer = new byte[1024];
-            int bytesRead;
-            while ((bytesRead = bufferedInputStream.read(buffer)) != -1) {
-                zipOutputStream.write(buffer, 0, bytesRead);
-            }
-        }
-
+        zipOutputStream.closeEntry();
+        zipOutputStream.close();
         return new ByteArrayResource(byteArrayOutputStream.toByteArray());
-
-
     }
-
-
 }

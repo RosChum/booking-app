@@ -14,12 +14,14 @@ services:
     ports:
       - "6379:6379"
 
+
   zookeeper:
     image: confluentinc/cp-zookeeper:6.2.0
     environment:
       ZOOKEEPER_CLIENT_PORT: 2181
     ports:
       - "2181:2181"
+
 
   kafka:
     image: confluentinc/cp-kafka:6.2.0
@@ -36,6 +38,7 @@ services:
       KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
       KAFKA_AUTO_CREATE_TOPIC_ENABLE: 'true'
 
+
   mongoDB:
     image: mongo:6.0.8
     ports:
@@ -44,3 +47,23 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: root
       MONGO_INITDB_DANABASE: bookingapp
+
+
+  booking-app:
+    image: booking-app
+    ports:
+      - "8080:8080"
+    depends_on:
+     - kafka
+     - zookeeper
+     - postgers
+     - redis
+     - mongoDB
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/booking
+      - SPRING_DATASOURCE_USERNAME=postgres
+      - SPRING_DATASOURCE_PASSWORD=postgres
+      - SPRING_JPA_HIBERNATE_DDL_AUTO=none
+
+
+

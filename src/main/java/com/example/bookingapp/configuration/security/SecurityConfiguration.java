@@ -63,6 +63,7 @@ public class SecurityConfiguration {
                                 .requestMatchers(BaseUrl.BASE_URL + "room/**").hasRole("ADMIN")
                                 .requestMatchers(HttpMethod.GET, BaseUrl.BASE_URL + "booking").hasRole("ADMIN")
                                 .requestMatchers(BaseUrl.BASE_URL + "auth/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, BaseUrl.BASE_URL + "statistic").hasRole("ADMIN")
                                 .anyRequest().authenticated())
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())
