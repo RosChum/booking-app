@@ -41,7 +41,7 @@ public class BaseRepositoryImpl<Entity extends BaseEntity> extends SimpleJpaRepo
         super.save(entity);
     }
 
-    public void hardDeleteById(Long id){
+    public void hardDeleteById(Long id) {
         super.deleteById(id);
     }
 }

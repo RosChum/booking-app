@@ -39,13 +39,12 @@ spring:
 app:
   jwt:
     secret: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
-    expireToken: 50m
+    expireToken: 60m
     expireRefreshToken: 190m
   kafka_topics:
     registration-user-topic: "registration-user"
     booking-room-topic: "booking-room"
   statistic:
     source: src/main/resources/statistic
-    registrationUserInformationPath: src/main/resources/statistic/registrationUser.csv
-    bookingRoomInformationPath: src/main/resources/statistic/bookingRoomInformation.csv
-
+    registration-user-information-path: src/main/resources/statistic/registrationUser.csv
+    booking-room-information-path: src/main/resources/statistic/bookingRoomInformation.csv

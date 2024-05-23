@@ -19,5 +19,6 @@ public interface BookingMapper {
     Booking convertToEntity(BookingDto dto);
 
     BookingShortDto convertToShortDto(Booking booking);
+
     List<BookingShortDto> convertListToListShortDto(List<Booking> booking);
 }

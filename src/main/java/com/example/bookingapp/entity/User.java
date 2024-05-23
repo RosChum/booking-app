@@ -14,7 +14,7 @@ import java.util.Set;
 @Setter
 @Entity
 @Table(name = "app_user")
-public class User extends BaseEntity{
+public class User extends BaseEntity {
 
     @Column(name = "name")
     private String name;

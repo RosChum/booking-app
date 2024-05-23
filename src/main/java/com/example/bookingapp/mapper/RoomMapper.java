@@ -4,7 +4,6 @@ import com.example.bookingapp.dto.room.RoomDto;
 import com.example.bookingapp.entity.Room;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.ReportingPolicy;
 
 import java.util.List;
 
@@ -15,10 +14,8 @@ public interface RoomMapper {
     @Mapping(target = "isDeleted", defaultValue = "false")
     Room convertToEntity(RoomDto roomDto);
 
-
     @Mapping(target = "booking", ignore = true)
     RoomDto convertToDto(Room room);
-
 
     List<Room> convertListDtoToListEntity(List<RoomDto> roomDtos);
 

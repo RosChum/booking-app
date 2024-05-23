@@ -5,7 +5,6 @@ import com.example.bookingapp.dto.hotel.ShortHotelDto;
 import com.example.bookingapp.entity.Hotel;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-import org.mapstruct.ReportingPolicy;
 
 import java.time.ZonedDateTime;
 
@@ -14,6 +13,7 @@ public interface HotelMapper {
 
 
     HotelDto convertToDto(Hotel hotel);
+
     @Mapping(target = "room", ignore = true)
     Hotel convertToEntity(HotelDto hotelDto);
 

@@ -10,5 +10,4 @@ import java.util.Optional;
 @Repository
 public interface BookingRepository extends BaseRepository<Booking> {
 
-    Optional<Booking> findByArrivalDateAfterAndDepartureDateBefore(ZonedDateTime to, ZonedDateTime from);
 }

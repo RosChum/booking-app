@@ -16,7 +16,6 @@ public class JwtProvider {
     @Value("${app.jwt.secret}")
     private String secret;
 
-
     @Value("${app.jwt.expireToken}")
     private Duration expireToken;
 
@@ -30,12 +29,12 @@ public class JwtProvider {
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(new Date().getTime() + expireToken.toMillis()))
                 .addClaims(claims)
-                .signWith(SignatureAlgorithm.HS512,secret)
+                .signWith(SignatureAlgorithm.HS512, secret)
                 .compact();
 
     }
 
-    public String getEmailFromToken(String token){
+    public String getEmailFromToken(String token) {
         return Jwts.parser().setSigningKey(secret).parseClaimsJws(token).getBody().getSubject();
 
     }
@@ -48,7 +47,7 @@ public class JwtProvider {
             log.error("Invalid signature: {}", e.getMessage());
         } catch (MalformedJwtException e) {
             log.error("Invalid token: {}", e.getMessage());
-        } catch (ExpiredJwtException e){
+        } catch (ExpiredJwtException e) {
             log.error("Token is expired: {}", e.getMessage());
         } catch (UnsupportedJwtException e) {
             log.error("Token is Unsupported: {}", e.getMessage());

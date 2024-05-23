@@ -2,8 +2,6 @@ package com.example.bookingapp.dto.hotel;
 
 import com.example.bookingapp.dto.baseDto.BaseDto;
 import com.example.bookingapp.dto.room.RoomDto;
-import com.example.bookingapp.entity.Room;
-import jakarta.persistence.Column;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

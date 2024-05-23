@@ -20,11 +20,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.MessageFormat;
 import java.time.ZonedDateTime;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
 @RequiredArgsConstructor
@@ -41,7 +38,7 @@ public class BookingService {
         Map<Boolean, List<Booking>> checkAvailable = checkAvailableForBooking(bookingDto.getArrivalDate()
                 , bookingDto.getDepartureDate(), bookingDto.getRoom().getId());
 
-       if (checkAvailable.containsKey(true)) {
+        if (checkAvailable.containsKey(true)) {
             Booking booking = bookingMapper.convertToEntity(bookingDto);
             booking.setUser(userRepository.findById(bookingDto.getUser().getId()).orElseThrow());
             booking.setRoom(roomRepository.findById(bookingDto.getRoom().getId()).orElseThrow());
@@ -61,7 +58,6 @@ public class BookingService {
         Page<Booking> bookings = bookingRepository.findAll(pageable);
         return new PageImpl<>(bookings.map(booking ->
                 bookingMapper.convertToDto(booking)).toList(), pageable, bookings.getTotalElements());
-
     }
 
     private Map<Boolean, List<Booking>> checkAvailableForBooking(ZonedDateTime dateFrom, ZonedDateTime dateTo, Long roomId) {
@@ -74,7 +70,6 @@ public class BookingService {
                 .filter(booking -> !dateTo.isBefore(booking.getArrivalDate()))
                 .toList();
         return Map.of(existsBooking.isEmpty(), existsBooking);
-
     }
 
 }

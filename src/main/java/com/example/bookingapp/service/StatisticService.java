@@ -1,4 +1,4 @@
-package com.example.bookingapp.service.statistic;
+package com.example.bookingapp.service;
 
 import com.example.bookingapp.dto.kafkaEvent.BookingRoomEvent;
 import com.example.bookingapp.dto.kafkaEvent.RegistrationUserEvent;
@@ -40,13 +40,12 @@ import java.util.zip.ZipOutputStream;
 @RequiredArgsConstructor
 public class StatisticService {
 
-    @Value("${app.statistic.registrationUserInformationPath}")
+    @Value("${app.statistic.registration-user-information-path}")
     private String registrationUserInformationPath;
-    @Value("${app.statistic.bookingRoomInformationPath}")
+    @Value("${app.statistic.booking-room-information-path}")
     private String bookingRoomInformationPath;
     @Value("${app.statistic.source}")
     private String sourceStatisticPath;
-
 
     private final RegistrationUserRepository registrationUserRepository;
     private final BookingRoomRepository bookingRoomRepository;

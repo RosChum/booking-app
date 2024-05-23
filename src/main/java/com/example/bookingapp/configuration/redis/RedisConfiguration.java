@@ -1,6 +1,5 @@
 package com.example.bookingapp.configuration.redis;
 
-import com.fasterxml.jackson.databind.ser.std.StringSerializer;
 import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

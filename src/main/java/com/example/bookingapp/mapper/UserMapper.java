@@ -17,6 +17,7 @@ public interface UserMapper {
     @Mapping(target = "isDeleted", defaultValue = "false")
     @Mapping(target = "password", ignore = true)
     User convertToEntity(UserDto userDto);
+
     @Mapping(target = "booking", ignore = true)
     UserDto convertToDto(User user);
 

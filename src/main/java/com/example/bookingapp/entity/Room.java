@@ -34,7 +34,7 @@ public class Room extends BaseEntity {
     private Hotel hotel;
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)
-    private List <Booking> booking = new ArrayList<>();
+    private List<Booking> booking = new ArrayList<>();
 
 
 }

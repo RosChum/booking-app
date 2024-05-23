@@ -2,7 +2,6 @@ package com.example.bookingapp.service;
 
 import com.example.bookingapp.dto.hotel.HotelDto;
 import com.example.bookingapp.dto.hotel.HotelSearchDto;
-import com.example.bookingapp.dto.hotel.RatingDto;
 import com.example.bookingapp.entity.Hotel;
 import com.example.bookingapp.entity.Hotel_;
 import com.example.bookingapp.exception.ContentNotFoundException;
@@ -38,8 +37,6 @@ public class HotelService implements BaseService<HotelDto, HotelSearchDto> {
             HotelDto hotelDto = hotelMapper.convertToDto(hotel);
             return hotelDto;
         }).toList(), pageable, hotels.getTotalElements());
-
-
     }
 
     @Override
@@ -89,12 +86,10 @@ public class HotelService implements BaseService<HotelDto, HotelSearchDto> {
                 .and(equal(Hotel_.city, searchDto.getCity()))
                 .and(equal(Hotel_.address, searchDto.getAddress()))
                 .and(equal(Hotel_.isDeleted, false))
-                .and(like(Hotel_.headline,searchDto.getHeadline()))
-                .and(greaterThanOrEqualTo(Hotel_.numberRatings,searchDto.getNumberRatings()))
-                .and(greaterThanOrEqualTo(Hotel_.rating,searchDto.getRating()));
-
+                .and(like(Hotel_.headline, searchDto.getHeadline()))
+                .and(greaterThanOrEqualTo(Hotel_.numberRatings, searchDto.getNumberRatings()))
+                .and(greaterThanOrEqualTo(Hotel_.rating, searchDto.getRating()));
     }
-
 
 
 }

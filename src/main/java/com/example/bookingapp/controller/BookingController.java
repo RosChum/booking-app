@@ -16,12 +16,12 @@ public class BookingController {
     private final BookingService bookingService;
 
     @PostMapping
-    public ResponseEntity<BookingDto> createBooking(@RequestBody BookingDto bookingDto){
+    public ResponseEntity<BookingDto> createBooking(@RequestBody BookingDto bookingDto) {
         return ResponseEntity.ok(bookingService.createBooking(bookingDto));
     }
 
     @GetMapping
-    public ResponseEntity<Page<BookingDto>> getAll(Pageable pageable){
+    public ResponseEntity<Page<BookingDto>> getAll(Pageable pageable) {
         return ResponseEntity.ok(bookingService.getAllBooking(pageable));
     }
 }

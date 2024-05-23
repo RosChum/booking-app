@@ -31,13 +31,13 @@ public class KafkaConfiguration {
 
 
     @Bean
-    NewTopic registrationUserTopic(){
-        return new NewTopic(registrationUserTopic,1,(short) 1);
+    NewTopic registrationUserTopic() {
+        return new NewTopic(registrationUserTopic, 1, (short) 1);
     }
 
     @Bean
-    NewTopic bookingRoomTopic(){
-        return new NewTopic(bookingRoomTopic,1,(short) 1);
+    NewTopic bookingRoomTopic() {
+        return new NewTopic(bookingRoomTopic, 1, (short) 1);
     }
 
 }

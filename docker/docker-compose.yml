@@ -60,10 +60,13 @@ services:
      - redis
      - mongoDB
     environment:
-      - SPRING_DATASOURCE_URL=jdbc:postgresql://localhost:5432/booking
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgers/booking
       - SPRING_DATASOURCE_USERNAME=postgres
       - SPRING_DATASOURCE_PASSWORD=postgres
       - SPRING_JPA_HIBERNATE_DDL_AUTO=none
-
-
+      - SPRING_DATA_MONGODB_URI=mongodb://root:root@mongoDB:27017/bookingapp?authSource=admin
+      - SPRING_KAFKA_BOOTSTRAP-SERVERS=kafka:9092
+      - SPRING_DATA_REDIS_HOST=redis
+      - APP_STATISTIC_SOURCE= app/statistic
+      - REGISTRATIONUSERINFORMAYIONPATH= app/statistic/registrationUser.csv
 

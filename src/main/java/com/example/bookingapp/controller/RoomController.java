@@ -21,7 +21,7 @@ public class RoomController implements BaseController<RoomDto, RoomSearchDto> {
     @GetMapping
     @PreAuthorize("hasAnyRole('USER','ADMIN')")
     public ResponseEntity<Page<RoomDto>> findAll(RoomSearchDto dto, Pageable pageable) {
-        return ResponseEntity.ok(roomService.findAll(dto,pageable));
+        return ResponseEntity.ok(roomService.findAll(dto, pageable));
     }
 
     @GetMapping("/{id}")

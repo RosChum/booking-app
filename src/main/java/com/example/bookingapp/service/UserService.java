@@ -46,7 +46,7 @@ public class UserService implements BaseService<UserDto, UserSearchDto> {
     public UserDto findById(Long id) {
         User user = userRepository.findById(id)
                 .orElseThrow(() -> new UserFoundException(MessageFormat.format("User with id {0} not found", id)));
-        UserDto userDto =userMapper.convertToDto(user);
+        UserDto userDto = userMapper.convertToDto(user);
         userDto.setBooking(bookingMapper.convertListToListShortDto(user.getBooking()));
         return userDto;
     }
@@ -60,9 +60,9 @@ public class UserService implements BaseService<UserDto, UserSearchDto> {
         User newUser = userMapper.convertToEntity(dto);
         newUser.setPassword(passwordEncoder.encode(dto.getPassword()));
         newUser.getRoles().addAll(dto.getRoles().stream().map(role -> {
-           Role existRole = roleRepository.findByRoleType(role.getRoleType()).orElseThrow();
-           existRole.getUsers().add(newUser);
-           return existRole;
+            Role existRole = roleRepository.findByRoleType(role.getRoleType()).orElseThrow();
+            existRole.getUsers().add(newUser);
+            return existRole;
         }).collect(Collectors.toSet()));
 
         return userMapper.convertToDto(userRepository.save(newUser));

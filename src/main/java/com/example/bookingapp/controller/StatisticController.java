@@ -1,6 +1,6 @@
 package com.example.bookingapp.controller;
 
-import com.example.bookingapp.service.statistic.StatisticService;
+import com.example.bookingapp.service.StatisticService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;

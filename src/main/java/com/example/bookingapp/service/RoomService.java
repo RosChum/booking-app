@@ -10,7 +10,6 @@ import com.example.bookingapp.repository.HotelRepository;
 import com.example.bookingapp.repository.RoomRepository;
 import com.example.bookingapp.specification.BaseSpecification;
 import jakarta.persistence.criteria.Join;
-import jakarta.persistence.criteria.Predicate;
 import jakarta.persistence.criteria.Root;
 import jakarta.persistence.criteria.Subquery;
 import lombok.RequiredArgsConstructor;
@@ -40,13 +39,8 @@ public class RoomService implements BaseService<RoomDto, RoomSearchDto> {
 
     @Override
     public Page<RoomDto> findAll(RoomSearchDto dto, Pageable pageable) {
-
         Page<Room> rooms = roomRepository.findAll(getSpecification(dto), pageable);
-
-
         return new PageImpl<>(rooms.map(room -> {
-
-
             RoomDto roomDto = roomMapper.convertToDto(room);
             roomDto.setBooking(room.getBooking().stream().map(bookingMapper::convertToDto).collect(Collectors.toList()));
             return roomDto;
@@ -103,8 +97,7 @@ public class RoomService implements BaseService<RoomDto, RoomSearchDto> {
                 .and(equal(Room_.roomCapacity, searchDto.getRoomCapacity()))
                 .and(between(Room_.price, searchDto.getMinPrice(), searchDto.getMaxPrice()))
                 .and(joinHotel(searchDto.getHotelId()))
-                .and(checkBooking(searchDto.getArrivalDate(), searchDto.getDepartureDate()))
-                ;
+                .and(checkBooking(searchDto.getArrivalDate(), searchDto.getDepartureDate()));
     }
 
 
@@ -123,28 +116,16 @@ public class RoomService implements BaseService<RoomDto, RoomSearchDto> {
             if (timeFrom == null || timeTo == null) {
                 return null;
             }
-            Join<Room, Booking> bookingJoin = root.join(Room_.booking);
-
-            Predicate predicate = criteriaBuilder.or(criteriaBuilder.between(bookingJoin.get(Booking_.arrivalDate), timeFrom, timeTo),
-                    criteriaBuilder.between(bookingJoin.get(Booking_.departureDate), timeFrom, timeTo)
-                    ,
-                    criteriaBuilder.and(criteriaBuilder.lessThanOrEqualTo(bookingJoin.get(Booking_.arrivalDate), timeFrom),
-                            criteriaBuilder.greaterThanOrEqualTo(bookingJoin.get(Booking_.departureDate), timeTo)
-                    )
-            );
-// TODO проверить логику предикатов
-
-//            Predicate predicate1 = criteriaBuilder.and(criteriaBuilder.lessThanOrEqualTo(bookingJoin.get(Booking_.arrivalDate), timeTo),
-//                    criteriaBuilder.greaterThanOrEqualTo(bookingJoin.get(Booking_.departureDate), timeFrom));
-//
-
             Subquery<Long> subquery = query.subquery(Long.class);
             Root<Booking> bookingRoot = subquery.from(Booking.class);
             subquery.select(bookingRoot.get(Booking_.room).get(Room_.id));
-            subquery.where(predicate);
-
-            return root.get(Room_.id).in(subquery).not();
-
+            subquery.where(criteriaBuilder.or(criteriaBuilder.between(bookingRoot.get(Booking_.arrivalDate), timeFrom, timeTo),
+                    criteriaBuilder.between(bookingRoot.get(Booking_.departureDate), timeFrom, timeTo)
+                    ,
+                    criteriaBuilder.and(criteriaBuilder.lessThanOrEqualTo(bookingRoot.get(Booking_.arrivalDate), timeFrom),
+                            criteriaBuilder.greaterThanOrEqualTo(bookingRoot.get(Booking_.departureDate), timeTo))
+            ));
+            return criteriaBuilder.not(root.get(Room_.id).in(subquery));
         });
     }
 

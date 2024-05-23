@@ -2,13 +2,10 @@ package com.example.bookingapp.specification;
 
 import com.example.bookingapp.dto.baseDto.BaseSearchDto;
 import com.example.bookingapp.entity.BaseEntity_;
-import jakarta.persistence.metamodel.Attribute;
 import jakarta.persistence.metamodel.SingularAttribute;
-import org.hibernate.metamodel.model.domain.internal.SingularAttributeImpl;
 import org.springframework.data.jpa.domain.Specification;
 
 import java.math.BigDecimal;
-import java.time.ZonedDateTime;
 import java.util.function.Supplier;
 
 public class BaseSpecification {
@@ -38,7 +35,7 @@ public class BaseSpecification {
                 (root, query, criteriaBuilder) -> {
                     query.distinct(true);
 
-                        return criteriaBuilder.greaterThanOrEqualTo(root.get(field),  value);
+                    return criteriaBuilder.greaterThanOrEqualTo(root.get(field), value);
 
                 });
     }
@@ -49,17 +46,17 @@ public class BaseSpecification {
                 (root, query, criteriaBuilder) -> {
                     query.distinct(true);
 
-                    return criteriaBuilder.greaterThanOrEqualTo(root.get(field),  value);
+                    return criteriaBuilder.greaterThanOrEqualTo(root.get(field), value);
 
                 });
     }
 
     public static <T> Specification<T> between(SingularAttribute<T, BigDecimal> field, BigDecimal minValue, BigDecimal maxValue) {
-        return checkForNull(minValue,maxValue, () ->
+        return checkForNull(minValue, maxValue, () ->
                 (root, query, criteriaBuilder) -> {
                     query.distinct(true);
 
-                    return criteriaBuilder.between(root.get(field),  minValue, maxValue);
+                    return criteriaBuilder.between(root.get(field), minValue, maxValue);
 
                 });
     }
@@ -70,7 +67,7 @@ public class BaseSpecification {
                 (root, query, criteriaBuilder) -> {
                     query.distinct(true);
 
-                    return criteriaBuilder.greaterThanOrEqualTo(root.get(field),  value);
+                    return criteriaBuilder.greaterThanOrEqualTo(root.get(field), value);
 
                 });
     }

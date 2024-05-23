@@ -80,8 +80,7 @@ public class SecurityConfiguration {
                         response.setContentType(MediaType.APPLICATION_JSON_VALUE);
                         objectMapper.writeValue(response.getOutputStream(), exception.getMessage());
                     });
-                })
-                .logout(log -> log.clearAuthentication(true));
+                }).logout(log -> log.clearAuthentication(true));
 
         return httpSecurity.build();
 

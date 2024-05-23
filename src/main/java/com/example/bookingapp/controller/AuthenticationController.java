@@ -20,12 +20,12 @@ public class AuthenticationController {
     private final SecurityService securityService;
 
     @PostMapping
-    public ResponseEntity<AuthenticationResponseDto> authentication(@RequestBody AuthDto authDto){
+    public ResponseEntity<AuthenticationResponseDto> authentication(@RequestBody AuthDto authDto) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(securityService.authentication(authDto));
     }
 
     @PostMapping("/refresh")
-    public ResponseEntity<AuthenticationResponseDto> refreshToken(@RequestBody RefreshTokenRequest tokenRequest){
+    public ResponseEntity<AuthenticationResponseDto> refreshToken(@RequestBody RefreshTokenRequest tokenRequest) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(securityService.refreshToken(tokenRequest));
     }
 

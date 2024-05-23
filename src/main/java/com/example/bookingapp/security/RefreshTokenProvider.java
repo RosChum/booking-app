@@ -43,7 +43,7 @@ public class RefreshTokenProvider {
     public boolean checkExpireRefreshToken(RefreshToken refreshToken) {
         if (refreshToken.getExpireDate().compareTo(Instant.now()) < 0) {
             refreshTokenRepository.delete(refreshToken);
-       return false;
+            return false;
         }
         return true;
     }
