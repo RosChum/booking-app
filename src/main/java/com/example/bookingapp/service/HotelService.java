@@ -1,5 +1,6 @@
 package com.example.bookingapp.service;
 
+import com.example.bookingapp.configuration.cache.CacheNames;
 import com.example.bookingapp.dto.hotel.HotelDto;
 import com.example.bookingapp.dto.hotel.HotelSearchDto;
 import com.example.bookingapp.entity.Hotel;
@@ -10,6 +11,9 @@ import com.example.bookingapp.mapper.RoomMapper;
 import com.example.bookingapp.repository.HotelRepository;
 import com.example.bookingapp.specification.BaseSpecification;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -23,6 +27,7 @@ import static com.example.bookingapp.specification.BaseSpecification.*;
 
 @Service
 @RequiredArgsConstructor
+@Slf4j
 public class HotelService implements BaseService<HotelDto, HotelSearchDto> {
 
     private final HotelRepository hotelRepository;
@@ -30,15 +35,18 @@ public class HotelService implements BaseService<HotelDto, HotelSearchDto> {
     private final RoomService roomService;
     private final RoomMapper roomMapper;
 
+
     @Override
     public Page<HotelDto> findAll(HotelSearchDto dto, Pageable pageable) {
         Page<Hotel> hotels = hotelRepository.findAll(getSpecification(dto), pageable);
+        log.info( "HotelService " + hotels);
         return new PageImpl<>(hotels.map(hotel -> {
             HotelDto hotelDto = hotelMapper.convertToDto(hotel);
             return hotelDto;
         }).toList(), pageable, hotels.getTotalElements());
-    }
 
+    }
+    @Cacheable(cacheNames = CacheNames.HOTEL_CACHE, key = "#id")
     @Override
     public HotelDto findById(Long id) {
         HotelDto hotelDto = hotelMapper.convertToDto(hotelRepository.findById(id)
@@ -48,6 +56,7 @@ public class HotelService implements BaseService<HotelDto, HotelSearchDto> {
         }
         return hotelDto;
     }
+
 
     @Transactional
     @Override
@@ -60,6 +69,7 @@ public class HotelService implements BaseService<HotelDto, HotelSearchDto> {
         return hotelMapper.convertToDto(hotel);
     }
 
+    @CacheEvict(cacheNames = CacheNames.HOTEL_CACHE, key = "#id")
     @Override
     public HotelDto update(Long id, HotelDto dto) {
         Hotel hotel = hotelRepository.findById(id).orElseThrow(() -> new ContentNotFoundException("Hotel not found!"));
@@ -72,6 +82,7 @@ public class HotelService implements BaseService<HotelDto, HotelSearchDto> {
         return hotelMapper.convertToDto(hotelRepository.save(hotel));
     }
 
+    @CacheEvict(cacheNames = CacheNames.HOTEL_CACHE, key = "#id")
     @Override
     public void deleteById(Long id) {
         Hotel hotel = hotelRepository.findById(id).orElseThrow(() -> new ContentNotFoundException("Hotel not found!"));

@@ -2,6 +2,7 @@ package com.example.bookingapp.dto.hotel;
 
 import com.example.bookingapp.dto.baseDto.BaseDto;
 import com.example.bookingapp.dto.room.RoomDto;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -16,6 +17,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Schema(description = "ДТО для отеля")
 public class HotelDto extends BaseDto {
 
     private ZonedDateTime createAt;

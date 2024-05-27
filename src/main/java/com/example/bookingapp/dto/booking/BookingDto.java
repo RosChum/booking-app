@@ -3,6 +3,7 @@ package com.example.bookingapp.dto.booking;
 import com.example.bookingapp.dto.baseDto.BaseDto;
 import com.example.bookingapp.dto.room.RoomShortDto;
 import com.example.bookingapp.dto.user.UserShortDto;
+import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -14,6 +15,7 @@ import java.time.ZonedDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Schema(description = "ДТО для бронирования")
 public class BookingDto extends BaseDto {
 
     private ZonedDateTime arrivalDate;

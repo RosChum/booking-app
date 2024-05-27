@@ -48,3 +48,9 @@ app:
     source: src/main/resources/statistic
     registration-user-information-path: src/main/resources/statistic/registrationUser.csv
     booking-room-information-path: src/main/resources/statistic/bookingRoomInformation.csv
+
+springdoc:
+  api-docs:
+    path: "/api-docs"
+  swagger-ui:
+    path: "/swagger-ui"

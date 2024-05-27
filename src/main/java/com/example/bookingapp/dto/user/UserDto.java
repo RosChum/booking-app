@@ -5,6 +5,7 @@ import com.example.bookingapp.dto.booking.BookingDto;
 import com.example.bookingapp.dto.booking.BookingShortDto;
 import com.example.bookingapp.entity.Booking;
 import com.example.bookingapp.entity.Role;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -21,6 +22,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Schema(description = "ДТО для юзера")
 public class UserDto extends BaseDto {
 
     @NotBlank(message = "Имя не должно быть пустым")

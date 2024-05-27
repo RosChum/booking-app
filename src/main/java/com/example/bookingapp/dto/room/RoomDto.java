@@ -5,6 +5,7 @@ import com.example.bookingapp.dto.booking.BookingDto;
 import com.example.bookingapp.dto.hotel.ShortHotelDto;
 import com.example.bookingapp.entity.Booking;
 import com.example.bookingapp.entity.Hotel;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.Column;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
@@ -23,6 +24,7 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Schema(description = "ДТО для комнаты")
 public class RoomDto extends BaseDto {
 
     private String name;

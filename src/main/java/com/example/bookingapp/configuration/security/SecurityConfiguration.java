@@ -64,6 +64,8 @@ public class SecurityConfiguration {
                                 .requestMatchers(HttpMethod.GET, BaseUrl.BASE_URL + "booking").hasRole("ADMIN")
                                 .requestMatchers(BaseUrl.BASE_URL + "auth/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, BaseUrl.BASE_URL + "statistic").hasRole("ADMIN")
+                                .requestMatchers("/swagger-ui/**").permitAll()
+                                .requestMatchers("/api-docs/**").permitAll()
                                 .anyRequest().authenticated())
                 .csrf(AbstractHttpConfigurer::disable)
                 .httpBasic(Customizer.withDefaults())

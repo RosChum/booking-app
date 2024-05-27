@@ -1,5 +1,6 @@
 package com.example.bookingapp.service;
 
+import com.example.bookingapp.configuration.cache.CacheNames;
 import com.example.bookingapp.dto.booking.BookingDto;
 import com.example.bookingapp.entity.Booking;
 import com.example.bookingapp.entity.Room;
@@ -11,6 +12,9 @@ import com.example.bookingapp.repository.RoomRepository;
 import com.example.bookingapp.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -33,6 +37,7 @@ public class BookingService {
     private final RoomRepository roomRepository;
     private final UserRepository userRepository;
 
+    @CacheEvict(cacheNames = CacheNames.BOOKING_CACHE,allEntries = true)
     @Transactional(isolation = Isolation.READ_COMMITTED)
     public BookingDto createBooking(BookingDto bookingDto) {
         Map<Boolean, List<Booking>> checkAvailable = checkAvailableForBooking(bookingDto.getArrivalDate()
@@ -54,8 +59,10 @@ public class BookingService {
 
     }
 
+    @Cacheable(cacheNames = CacheNames.BOOKING_CACHE)
     public Page<BookingDto> getAllBooking(Pageable pageable) {
         Page<Booking> bookings = bookingRepository.findAll(pageable);
+        log.info("getAllBooking " + bookings);
         return new PageImpl<>(bookings.map(booking ->
                 bookingMapper.convertToDto(booking)).toList(), pageable, bookings.getTotalElements());
     }
