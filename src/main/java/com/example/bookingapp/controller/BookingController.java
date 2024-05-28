@@ -25,7 +25,7 @@ public class BookingController {
     @Operation(summary = "Создание бронирования", responses = {
             @ApiResponse(responseCode = "200", description = "Бронирование создано"
                     , content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE,
-            schema = @Schema(allOf = BookingDto.class))),
+                    schema = @Schema(allOf = BookingDto.class))),
             @ApiResponse(responseCode = "404", description = "Ресурс не найден"
                     , content = @Content()),
             @ApiResponse(responseCode = "400", description = "Неправильный запрос"
@@ -37,6 +37,7 @@ public class BookingController {
     public ResponseEntity<BookingDto> createBooking(@RequestBody BookingDto bookingDto) {
         return ResponseEntity.ok(bookingService.createBooking(bookingDto));
     }
+
     @Operation(summary = "Получение всех записей бронирования", responses = {
             @ApiResponse(responseCode = "200", description = "Записи получены"
                     , content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE

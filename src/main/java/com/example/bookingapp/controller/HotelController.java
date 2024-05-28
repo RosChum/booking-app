@@ -3,7 +3,6 @@ package com.example.bookingapp.controller;
 import com.example.bookingapp.dto.hotel.HotelDto;
 import com.example.bookingapp.dto.hotel.HotelSearchDto;
 import com.example.bookingapp.dto.hotel.RatingDto;
-import com.example.bookingapp.dto.user.UserDto;
 import com.example.bookingapp.service.BaseService;
 import com.example.bookingapp.service.RatingService;
 import io.swagger.v3.oas.annotations.Operation;

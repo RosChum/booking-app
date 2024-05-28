@@ -4,11 +4,9 @@ import com.example.bookingapp.dto.baseDto.BaseDto;
 import com.example.bookingapp.dto.baseDto.BaseSearchDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
-import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 
 public interface BaseController<Dto extends BaseDto, SearchDto extends BaseSearchDto> {

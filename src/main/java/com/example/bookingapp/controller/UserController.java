@@ -1,10 +1,8 @@
 package com.example.bookingapp.controller;
 
-import com.example.bookingapp.dto.baseDto.BaseDto;
 import com.example.bookingapp.dto.user.UserDto;
 import com.example.bookingapp.dto.user.UserSearchDto;
 import com.example.bookingapp.service.BaseService;
-import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;

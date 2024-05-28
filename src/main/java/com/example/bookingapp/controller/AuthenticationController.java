@@ -39,6 +39,7 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponseDto> authentication(@RequestBody AuthDto authDto) {
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(securityService.authentication(authDto));
     }
+
     @Operation(summary = "Обновление токена по рефреш-токену", responses = {
             @ApiResponse(responseCode = "200", description = "Токен обновлен"
                     , content = @Content(mediaType = MediaType.APPLICATION_JSON_VALUE
