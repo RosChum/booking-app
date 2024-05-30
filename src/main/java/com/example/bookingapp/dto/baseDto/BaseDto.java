@@ -1,9 +1,7 @@
 package com.example.bookingapp.dto.baseDto;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.MappedSuperclass;
+import lombok.*;
 
 import java.io.Serializable;
 
@@ -11,6 +9,7 @@ import java.io.Serializable;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@ToString
 public class BaseDto implements Serializable {
 
     private Long id;

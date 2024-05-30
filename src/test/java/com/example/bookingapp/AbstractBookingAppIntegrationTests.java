@@ -84,8 +84,9 @@ public class AbstractBookingAppIntegrationTests {
     @Autowired
     protected MockMvc mockMvc;
 
-    protected ObjectMapper objectMapper = new ObjectMapper();
-
+    @Autowired
+    protected ObjectMapper objectMapper;
+    protected static Long testUserId;
 
     @BeforeEach
     public void setUp() {
