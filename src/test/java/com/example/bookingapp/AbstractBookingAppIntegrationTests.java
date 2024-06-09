@@ -1,14 +1,5 @@
 package com.example.bookingapp;
 
-import com.example.bookingapp.dto.booking.BookingDto;
-import com.example.bookingapp.dto.hotel.HotelDto;
-import com.example.bookingapp.dto.hotel.ShortHotelDto;
-import com.example.bookingapp.dto.room.RoomDto;
-import com.example.bookingapp.dto.room.RoomShortDto;
-import com.example.bookingapp.dto.user.UserDto;
-import com.example.bookingapp.dto.user.UserShortDto;
-import com.example.bookingapp.entity.Role;
-import com.example.bookingapp.entity.RoleType;
 import com.example.bookingapp.service.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redis.testcontainers.RedisContainer;
@@ -17,6 +8,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.DynamicPropertyRegistry;
 import org.springframework.test.context.DynamicPropertySource;
@@ -29,15 +21,12 @@ import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
 
-import java.math.BigDecimal;
-import java.time.ZonedDateTime;
-import java.util.Set;
-
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
 @Testcontainers
 @AutoConfigureMockMvc
+@DirtiesContext(classMode = DirtiesContext.ClassMode.AFTER_CLASS)
 public class AbstractBookingAppIntegrationTests {
 
     @Container

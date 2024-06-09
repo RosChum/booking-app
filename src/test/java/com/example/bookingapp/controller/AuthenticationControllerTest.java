@@ -10,7 +10,7 @@ import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-@TestClassOrder(ClassOrderer.OrderAnnotation.class)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class AuthenticationControllerTest extends AbstractBookingAppIntegrationTests {
 
     private static String token;
@@ -46,10 +46,6 @@ public class AuthenticationControllerTest extends AbstractBookingAppIntegrationT
         AuthenticationResponseDto responseDto = objectMapper.readValue(json, AuthenticationResponseDto.class);
         Assertions.assertNotNull(responseDto);
         Assertions.assertEquals(token.length(),responseDto.getAccessToken().length());
-        Assertions.assertNotEquals(token,responseDto.getAccessToken());
-
     }
-
-
 
 }

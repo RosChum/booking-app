@@ -35,7 +35,6 @@ public class RefreshTokenProvider {
 
     public RefreshToken getRefreshTokenByToken(String token) {
 
-        log.info("getRefreshTokenByToken " + token.toString());
         return refreshTokenRepository.findByToken(token)
                 .orElseThrow(() -> new RefreshTokenException(MessageFormat.format("Refresh token {0} not found", token)));
     }
