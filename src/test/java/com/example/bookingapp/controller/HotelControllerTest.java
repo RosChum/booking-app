@@ -2,11 +2,14 @@ package com.example.bookingapp.controller;
 
 import com.example.bookingapp.AbstractBookingAppIntegrationTests;
 import com.example.bookingapp.dto.hotel.HotelDto;
+import com.example.bookingapp.dto.hotel.RatingDto;
 import com.example.bookingapp.dto.room.RoomDto;
-import com.example.bookingapp.dto.user.UserDto;
+import com.example.bookingapp.entity.Hotel;
+import com.example.bookingapp.repository.HotelRepository;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.web.servlet.MvcResult;
@@ -20,6 +23,9 @@ import java.util.Collection;
 public class HotelControllerTest extends AbstractBookingAppIntegrationTests {
 
     private static Long hotelId;
+
+    @Autowired
+    private HotelRepository hotelRepository;
 
     @Test
     @Order(1)
@@ -63,10 +69,11 @@ public class HotelControllerTest extends AbstractBookingAppIntegrationTests {
         Assertions.assertEquals("TestHotel", responseDto.getName());
 
     }
+
     @Test
     @Order(3)
     @WithMockUser(username = "admin", roles = {"ADMIN"})
-    public void whenFindAll_returnPageWithHotels() throws Exception{
+    public void whenFindAll_returnPageWithHotels() throws Exception {
         MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get(BaseUrl.BASE_URL + "hotel"))
                 .andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
         String json = result.getResponse().getContentAsString();
@@ -79,9 +86,47 @@ public class HotelControllerTest extends AbstractBookingAppIntegrationTests {
     }
 
 
+    @Test
+    @Order(4)
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    public void whenUpdateById_returnUpdatedDto() throws Exception {
+        HotelDto requestDto = new HotelDto();
+        requestDto.setName("Update Hotel Name");
+        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.put(BaseUrl.BASE_URL + "hotel/update/{id}", hotelId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(requestDto)))
+                .andExpect(MockMvcResultMatchers.status().isOk()).andReturn();
+        HotelDto responseDto = objectMapper.readValue(result.getResponse().getContentAsString(), HotelDto.class);
+
+        Assertions.assertEquals(requestDto.getName(), responseDto.getName());
+    }
+
+    @Test
+    @Order(5)
+    @WithMockUser(username = "UpdateUserTest", roles = {"USER"})
+    public void whenSetRating_returnHotelDtoWithUpdatedRating() throws Exception {
+        RatingDto ratingDto = new RatingDto();
+        ratingDto.setRating(5);
+        mockMvc.perform(MockMvcRequestBuilders.post(BaseUrl.BASE_URL + "hotel/rating/{hotelId}", hotelId)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(objectMapper.writeValueAsString(ratingDto)))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+        Hotel hotel = hotelRepository.findById(hotelId).orElseThrow();
+        Assertions.assertEquals(Double.valueOf(5), hotel.getRating());
+
+    }
 
 
+    @Test
+    @Order(6)
+    @WithMockUser(username = "admin", roles = {"ADMIN"})
+    public void whenDeleteByID_changeStatusEntityIsDelete() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.delete(BaseUrl.BASE_URL + "/hotel/{id}", hotelId));
 
-
+        Hotel hotel = hotelRepository.findById(hotelId).orElseThrow();
+        Assertions.assertTrue(hotel.getIsDeleted());
+        hotel.setIsDeleted(false);
+        hotelRepository.save(hotel);
+    }
 
 }

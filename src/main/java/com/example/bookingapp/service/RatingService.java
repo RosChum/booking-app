@@ -18,12 +18,20 @@ public class RatingService {
 
     public HotelDto setRating(Long hotelId, RatingDto ratingDto) {
         Hotel hotel = hotelRepository.findById(hotelId).orElseThrow(() -> new ContentNotFoundException("Hotel not found!"));
-        Double rating = hotel.getRating();
-        Integer newMark = ratingDto.getRating();
-        Integer numberOfRating = hotel.getNumberRatings();
-        Double totalRating = (rating * numberOfRating) - rating + newMark;
-        hotel.setRating(Math.ceil((totalRating / numberOfRating) * Math.pow(10, 1)) / Math.pow(10, 1));
-        hotel.setNumberRatings(numberOfRating + 1);
+
+        if (hotel.getNumberRatings() > 0) {
+
+            Double rating = hotel.getRating();
+            Integer newMark = ratingDto.getRating();
+            Integer numberOfRating = hotel.getNumberRatings();
+            Double totalRating = (rating * numberOfRating) - rating + newMark;
+            hotel.setRating(Math.ceil((totalRating / numberOfRating) * Math.pow(10, 1)) / Math.pow(10, 1));
+            hotel.setNumberRatings(numberOfRating + 1);
+        } else {
+            hotel.setRating(Double.valueOf(ratingDto.getRating()));
+            hotel.setNumberRatings(1);
+        }
+
         return hotelMapper.convertToDto(hotelRepository.save(hotel));
 
     }

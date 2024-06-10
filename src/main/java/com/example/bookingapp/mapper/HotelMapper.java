@@ -22,6 +22,8 @@ public interface HotelMapper {
     @Mapping(target = "timeChanged", expression = "java(ZonedDateTime.now())")
     @Mapping(target = "isDeleted", defaultValue = "false")
     @Mapping(target = "room", ignore = true)
+    @Mapping(target = "rating", defaultValue = "0.0")
+    @Mapping(target = "numberRatings", defaultValue = "0")
     Hotel createEntityByDto(HotelDto hotelDto);
 
     ShortHotelDto convertToShortDto(Hotel hotel);

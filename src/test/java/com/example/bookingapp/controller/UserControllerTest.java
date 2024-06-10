@@ -101,7 +101,7 @@ public class UserControllerTest extends AbstractBookingAppIntegrationTests {
     @Test
     @Order(5)
     @WithMockUser(username = "admin", roles = {"ADMIN"})
-    public void whenDeleteById_returnStatusOkAndIsDeleteEqualTru() throws Exception {
+    public void whenDeleteById_returnStatusOkAndIsDeleteEqualTrue() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders
                         .delete("/api/v1/user/{id}", testUserId))
                 .andExpect(MockMvcResultMatchers.status().isOk());
