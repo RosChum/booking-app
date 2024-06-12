@@ -21,6 +21,6 @@ public class Role extends BaseEntity {
     public RoleType roleType;
 
     @JsonIgnore
-    @ManyToMany(mappedBy = "roles", fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "roles", fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     private Set<User> users = new HashSet<>();
 }

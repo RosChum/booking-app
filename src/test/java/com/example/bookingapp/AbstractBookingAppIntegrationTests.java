@@ -1,9 +1,18 @@
 package com.example.bookingapp;
 
+import com.example.bookingapp.dto.booking.BookingDto;
+import com.example.bookingapp.dto.hotel.HotelDto;
+import com.example.bookingapp.dto.hotel.ShortHotelDto;
+import com.example.bookingapp.dto.room.RoomDto;
+import com.example.bookingapp.dto.room.RoomShortDto;
+import com.example.bookingapp.dto.user.UserDto;
+import com.example.bookingapp.dto.user.UserShortDto;
+import com.example.bookingapp.entity.Role;
+import com.example.bookingapp.entity.RoleType;
 import com.example.bookingapp.service.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.redis.testcontainers.RedisContainer;
-import org.junit.jupiter.api.BeforeEach;
+import org.junit.BeforeClass;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -20,6 +29,10 @@ import org.testcontainers.containers.PostgreSQLContainer;
 import org.testcontainers.junit.jupiter.Container;
 import org.testcontainers.junit.jupiter.Testcontainers;
 import org.testcontainers.utility.DockerImageName;
+
+import java.math.BigDecimal;
+import java.time.ZonedDateTime;
+import java.util.Set;
 
 @SpringBootTest
 @ExtendWith(SpringExtension.class)
@@ -76,35 +89,43 @@ public class AbstractBookingAppIntegrationTests {
     @Autowired
     protected ObjectMapper objectMapper;
     protected static Long testUserId;
-
-    @BeforeEach
+    protected static Long hotelId;
+    protected static Long roomId;
+    protected static Long userId;
+    @BeforeClass
     public void setUp() {
-//        Role adminRole = new Role();
-//        adminRole.setRoleType(RoleType.ROLE_ADMIN);
-//        Role userRole = new Role();
-//        adminRole.setRoleType(RoleType.ROLE_USER);
-//
-//        UserShortDto admin = new UserShortDto();
-//        admin.setId(userService.create(new UserDto("Admin", "admin", "mail@mail.ru", ZonedDateTime.now(), null, Set.of(adminRole))).getId());
-//        UserShortDto user = new UserShortDto();
-//        user.setId(userService.create(new UserDto("User", "user", "mail1@mail.ru", ZonedDateTime.now(), null, Set.of(userRole))).getId());
-//
-//        HotelDto hotelDto = new HotelDto(ZonedDateTime.now(), ZonedDateTime.now(), "Hotel"
-//                , "some description", "City", "street, 10"
-//                , 10, null, null, null);
-//        ShortHotelDto shortHotelDto = new ShortHotelDto();
-//        shortHotelDto.setId(hotelService.create(hotelDto).getId());
-//
-//        RoomShortDto roomShortDto1 = new RoomShortDto();
-//        roomShortDto1.setId(roomService.create(new RoomDto("room1", "some description"
-//                , 101, new BigDecimal("115.50"), 3, shortHotelDto, null)).getId());
-//
-//        RoomShortDto roomShortDto2 = new RoomShortDto();
-//        roomShortDto2.setId(roomService.create(new RoomDto("room2", "some description"
-//                , 102, new BigDecimal("70.30"), 2, shortHotelDto, null)).getId());
-//
-//        bookingService.createBooking(new BookingDto(ZonedDateTime.parse("2024-01-01T10:00:00Z"), ZonedDateTime.parse("2024-01-10T10:00:00Z"), admin, roomShortDto1));
-//        bookingService.createBooking(new BookingDto(ZonedDateTime.parse("2024-01-20T10:00:00Z"), ZonedDateTime.parse("2024-01-30T10:00:00Z"), admin, roomShortDto1));
+        Role adminRole = new Role();
+        adminRole.setRoleType(RoleType.ROLE_ADMIN);
+        Role userRole = new Role();
+        userRole.setRoleType(RoleType.ROLE_USER);
+
+        UserShortDto admin = new UserShortDto();
+        admin.setId(userService.create(new UserDto("Admin", "admin", "mail@mail.ru", ZonedDateTime.now(), null, Set.of(adminRole))).getId());
+        userId = admin.getId();
+
+        UserShortDto user = new UserShortDto();
+        user.setId(userService.create(new UserDto("User", "user", "mail1@mail.ru", ZonedDateTime.now(), null, Set.of(userRole))).getId());
+
+        HotelDto hotelDto = new HotelDto(ZonedDateTime.now(), ZonedDateTime.now(), "Hotel"
+                , "some description", "City", "street, 10"
+                , 10, null, null, null);
+        ShortHotelDto shortHotelDto = new ShortHotelDto();
+        shortHotelDto.setId(hotelService.create(hotelDto).getId());
+
+        hotelId = shortHotelDto.getId();
+
+        RoomShortDto roomShortDto1 = new RoomShortDto();
+        roomShortDto1.setId(roomService.create(new RoomDto("room1", "some description"
+                , 101, new BigDecimal("115.50"), 3, shortHotelDto, null)).getId());
+
+        roomId = roomShortDto1.getId();
+
+        RoomShortDto roomShortDto2 = new RoomShortDto();
+        roomShortDto2.setId(roomService.create(new RoomDto("room2", "some description"
+                , 102, new BigDecimal("70.30"), 2, shortHotelDto, null)).getId());
+
+        bookingService.createBooking(new BookingDto(ZonedDateTime.parse("2024-01-01T10:00:00Z"), ZonedDateTime.parse("2024-01-10T10:00:00Z"), admin, roomShortDto1));
+        bookingService.createBooking(new BookingDto(ZonedDateTime.parse("2024-01-20T10:00:00Z"), ZonedDateTime.parse("2024-01-30T10:00:00Z"), admin, roomShortDto1));
     }
 
 
