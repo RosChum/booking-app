@@ -18,10 +18,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.math.BigDecimal;
 import java.util.Collection;
+
 @DisplayName("Тест  HotelController")
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class HotelControllerTest extends AbstractBookingAppIntegrationTests {
-
 
 
     @Autowired

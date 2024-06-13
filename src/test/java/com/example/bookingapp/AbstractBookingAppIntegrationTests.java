@@ -92,6 +92,7 @@ public class AbstractBookingAppIntegrationTests {
     protected static Long hotelId;
     protected static Long roomId;
     protected static Long userId;
+
     @BeforeClass
     public void setUp() {
         Role adminRole = new Role();
